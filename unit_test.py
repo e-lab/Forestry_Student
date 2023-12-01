@@ -17,13 +17,17 @@ def take_exam(file_path="Test_Results/test_exam.txt"):
         counter = 0
         for line in file:
             # Process each line here (e.g., print or manipulate data)
-            user_input = line.strip()
-            print(user_input)
-            chat_history = chatbot.process_question(user_input, database_name, chat_history)
-            print("______")
-            print(chat_history[0]['message'].split('LLM Response:')[0])
-            ans_dict['Question'].append(user_input)
-            ans_dict['Answer'].append(chat_history[0]['message'].split('LLM Response:')[0])
+            user_input = str(line.strip())
+            try:
+                print(f"Question:\t{user_input}")
+                chat_history = chatbot.process_question(str(user_input), database_name, chat_history)
+                print("______")
+                print(chat_history[0]['message'].split('LLM Response:')[0])
+                ans_dict['Question'].append(user_input)
+                ans_dict['Answer'].append(chat_history[0]['message'].split('LLM Response:')[0])
+            except:
+                ans_dict['Question'].append(user_input)
+                ans_dict['Answer'].append("N/A")
             counter += 1
             #break
     #print(ans_dict)
