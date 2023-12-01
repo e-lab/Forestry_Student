@@ -1,0 +1,7 @@
+
+*.pyc
+courses.db
+*.pdf
+trees.db
+trees_old.db
+Untitled-1.ipynb
