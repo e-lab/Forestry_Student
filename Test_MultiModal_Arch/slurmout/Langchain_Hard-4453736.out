@@ -1,0 +1,8 @@
+RANK: 2
+WORLD_SIZE: 4
+                                            question       type
+0                 Magnolia grandiflora is evergreen.  TrueFalse
+1              Pacific year has a rapid growth rate.  TrueFalse
+2  Platanus occidentalis is native to the east co...  TrueFalse
+3  The cones red spruce are quite long between 6 ...  TrueFalse
+4                      Douglasfir is not a true fir.  TrueFalse

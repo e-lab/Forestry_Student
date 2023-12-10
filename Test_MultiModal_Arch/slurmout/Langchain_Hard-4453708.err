@@ -1,0 +1,6 @@
+/usr/bin/uuidgen: /apps/spack/gilbreth/apps/anaconda/2020.11-py38-gcc-4.8.5-djkvkvk/lib/libuuid.so.1: no version information available (required by /usr/bin/uuidgen)
+Traceback (most recent call last):
+  File "langchain_hard.py", line 9, in <module>
+    import openai
+ModuleNotFoundError: No module named 'openai'
+srun: error: gilbreth-k027: task 0: Exited with exit code 1

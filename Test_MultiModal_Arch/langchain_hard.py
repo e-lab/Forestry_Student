@@ -282,7 +282,13 @@ class SimilarityQA(BaseTool):
             # Write answers to the output file
             with open(output_file, 'w') as file:
                 for ans in answers:
-                    file.write(ans + '\n')
+                    if isinstance(ans, list):
+                        # If ans is a list, convert it to a string before writing to the file
+                        file.write(' '.join(map(str, ans)) + '\n')
+                    else:
+                        # If ans is not a list, directly write it to the file
+                        file.write(str(ans) + '\n')
+
         
         # Optionally, you can return the list of answers or perform other actions as needed.
         return answers
