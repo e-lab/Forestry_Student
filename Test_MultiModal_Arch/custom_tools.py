@@ -15,7 +15,7 @@ pipe = pipeline(
 
 class Image_to_Text(BaseTool):
     name = "image_to_text"
-    description = (f""")This tool utilizes the Nougat model by Meta to extract text from images, PDFs, 
+    description = (f"""This tool utilizes the Nougat model by Meta to extract text from images, PDFs, 
     or URLs by converting them to image files. Ideal for digitizing text from scanned 
     documents, photos, or online sources, providing high-quality text output.
     To use this tool you must provide the URL prarameter as a list of urls""")
