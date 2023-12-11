@@ -1,0 +1,22 @@
+/usr/bin/uuidgen: /apps/spack/gilbreth/apps/anaconda/2020.11-py38-gcc-4.8.5-djkvkvk/lib/libuuid.so.1: no version information available (required by /usr/bin/uuidgen)
+/home/vciroski/.local/lib/python3.8/site-packages/pydot.py:17: UserWarning: `pydot` could not import `dot_parser`, so `pydot` will be unable to parse DOT files. The error was:  No module named 'pyparsing'
+  warnings.warn(
+Traceback (most recent call last):
+  File "langchain_hard.py", line 377, in <module>
+    df = pd.read_csv("manual_qt_gen.csv")
+  File "/home/vciroski/.conda/envs/cent7/2020.11-py38/elab_2/lib/python3.8/site-packages/pandas/io/parsers/readers.py", line 912, in read_csv
+    return _read(filepath_or_buffer, kwds)
+  File "/home/vciroski/.conda/envs/cent7/2020.11-py38/elab_2/lib/python3.8/site-packages/pandas/io/parsers/readers.py", line 583, in _read
+    return parser.read(nrows)
+  File "/home/vciroski/.conda/envs/cent7/2020.11-py38/elab_2/lib/python3.8/site-packages/pandas/io/parsers/readers.py", line 1704, in read
+    ) = self._engine.read(  # type: ignore[attr-defined]
+  File "/home/vciroski/.conda/envs/cent7/2020.11-py38/elab_2/lib/python3.8/site-packages/pandas/io/parsers/c_parser_wrapper.py", line 234, in read
+    chunks = self._reader.read_low_memory(nrows)
+  File "pandas/_libs/parsers.pyx", line 814, in pandas._libs.parsers.TextReader.read_low_memory
+  File "pandas/_libs/parsers.pyx", line 875, in pandas._libs.parsers.TextReader._read_rows
+  File "pandas/_libs/parsers.pyx", line 850, in pandas._libs.parsers.TextReader._tokenize_rows
+  File "pandas/_libs/parsers.pyx", line 861, in pandas._libs.parsers.TextReader._check_tokenize_status
+  File "pandas/_libs/parsers.pyx", line 2029, in pandas._libs.parsers.raise_parser_error
+pandas.errors.ParserError: Error tokenizing data. C error: Expected 2 fields in line 5, saw 3
+
+srun: error: gilbreth-k015: task 0: Exited with exit code 1

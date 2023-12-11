@@ -1,10 +1,13 @@
 from langchain.agents import AgentType, Tool, initialize_agent
 from langchain.llms import OpenAI
 from langchain.tools import BaseTool
+import transformers
 from transformers import pipeline, AutoFeatureExtractor
 
 from transformers import pipeline, GenerationConfig
 from huggingface_hub import HfApi
+
+from transformers import StoppingCriteria, StoppingCriteriaList
 
 import openai
 from PIL import Image
@@ -18,7 +21,19 @@ import json
 import csv
 import sqlite3
 import time
+import torch
 from tqdm import tqdm
+import torch.cuda as cuda
+
+import sqlite3
+import json
+import time
+import os
+
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
+
+
 
 class ImageToTextTool(BaseTool):
     def __init__(self):
@@ -228,6 +243,55 @@ class QuestionTypeGenerator(BaseTool):
 
         return f"Qutestion type dictionary was saved to {file_name}"
     
+class VectorStore():
+    def __init__(self):
+        super().__init__()
+
+    def add_embeddings(self, file_contents, file_name, class_name, topic_name, database_name = 'courses.db'):
+        database_exists = os.path.exists(database_name)
+        # If the database doesn't exist, create the table
+        if not database_exists:
+            self.init_database(database_name)
+        self.conn = sqlite3.connect(database_name)
+        self.cursor = self.conn.cursor()
+
+        
+        texts = split_to_chunks(file_contents)
+        for i, t in enumerate(texts):
+            insert_data_into_database(self.cursor, t, class_name, topic_name, file_name)
+        self.conn.commit()
+        self.conn.close()
+
+        
+    def init_database(self, database_name = 'courses.db'):
+        # Check if the database exists
+        
+        database_exists = os.path.exists(database_name)
+
+        # If the database doesn't exist, create the table
+        if not database_exists:
+            print("MAKING DB")
+            # Connect to SQLite database or create it if it doesn't exist
+            self.conn = sqlite3.connect(database_name)
+            self.cursor = self.conn.cursor()
+            self.cursor.execute('''
+                CREATE TABLE IF NOT EXISTS documents (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    content TEXT,
+                    embedding BLOB,
+                    class TEXT,
+                    topic TEXT,
+                    file_name TEXT
+                )
+            ''')
+            self.conn.commit()
+            self.conn.close()
+
+    def load_database(self, database_name = 'courses.db'):
+        self.conn = sqlite3.connect(database_name)
+        self.cursor = self.conn.cursor()
+
+
 class SimilarityQA(BaseTool):
     def __init__(self):
         super().__init__(
@@ -252,6 +316,51 @@ class SimilarityQA(BaseTool):
         self.conn = sqlite3.connect(database_name)
         self.cursor = self.conn.cursor()
 
+    def get_most_similar_embbeding_for_question(self, cursor, question):
+        #Probably need to send in cursor
+        """
+        Retrieve the most similar embedding from the database for the given question.
+
+        Parameters:
+        - question (str): The input question for which the similarity is calculated.
+
+        Returns:
+        - embeddings (list or None): The embeddings associated with the most similar question, or None if no result.
+        """
+
+        # Assuming you have a database connection object named 'cursor'
+        cursor.execute("SELECT content, embedding FROM documents")
+        result = cursor.fetchall()
+
+        q_embbed = get_embedding(question)
+        start_time = time.time()
+
+        result_dict = {"Content": [], 'Embeddings': [], 'Similarity Score': []}
+
+        #print("SIMILARITY SCORE")
+        if result:
+            for index in range(len(result)):
+                content = result[index][0]
+                r = result[index][1]
+            
+                r = json.loads(r)
+                similarity_score = cosine_similarity(np.array(q_embbed).reshape(1, -1), np.array(r).reshape(1, -1))
+                result_dict['Embeddings'].append([r])
+                result_dict['Similarity Score'].append(similarity_score[0][0])
+                result_dict['Content'].append(content)
+    
+            result_df = pd.DataFrame(result_dict)
+            max_similarity_row = result_df.loc[result_df['Similarity Score'].idxmax()]
+
+            end_time = time.time()
+            runtime = end_time - start_time
+            #print("Runtime:", runtime, "seconds")
+
+            return max_similarity_row
+                
+
+        return None, None, None
+
     def _run(self, database_name='courses.db', data_path=None, queries=None, save_doc_flag=False, output_file='EXAM_ANSWERS.txt', top_k=1):
         if queries is None and data_path is None:
             return "Please provide us with a question or a path to questions."
@@ -269,13 +378,43 @@ class SimilarityQA(BaseTool):
         # self.load_database(database_name=database_name)
 
         llm = Init_Agent().get_simple_llm_pipeline()
-        answers = []  # List to store answers
+        answers = ["number,questions,answer"]  # List to store answers
+        print(len(queries))
+        counter = 1
+        translator = str.maketrans("", "", string.punctuation)
+
+        self.load_database(database_name) 
+        
+        vector_content, _, similarity_score = np.array(get_most_similar_embbeding_for_question(self.cursor,query))
+        
+        
+        sys_msg = "You are the smartest student in class you will answer the following questions only based on the format provided. Only provide the final answer as the output"
+          
         for query in tqdm(queries, desc="Processing queries", unit="query"):
-            """Add logic for looking up the most similar context to answer the question from the database"""
-            sys_msg = ""
-            response = llm(f"{sys_msg} {query}", top_k=top_k)
-            answers.append(response)
+            print(query)
+            vector_content, _, similarity_score = np.array(self.et_most_similar_embbeding_for_question(self.cursor,query))
+            if similarity_score < 0.6:
+                """Add logic for looking up the most similar context to answer the question from the database"""
+                response = llm(f"Answer this question here is some additonal content to help {vector_content} {sys_msg} {query}", top_k=top_k)
+            else:
+                response = llm(f"Answer this question here is some additonal content to help {vector_content} {sys_msg} {query}", top_k=top_k)
+               
+          
+            #print(response[0]['generated_text'].split("format")[-1])
+            tmp = response[0]['generated_text'].split("format")[-1]
+            if tmp.contains("Answer:"):
+                tmp = tmp.split("Answer:")[-1]
+            no_punct = tmp.translate(translator)
+            clean_string = " ".join(no_punct.split())
+            #print(tmp)
+            #print()
+            answers.append(f"{counter},{query},{clean_string}")
+            counter+=1
+
+            print(answers[-1])
+            #break
             #time.sleep(0.5) 
+        
 
 
         if save_doc_flag:
@@ -294,6 +433,15 @@ class SimilarityQA(BaseTool):
         return answers
 
 
+class StopOnTokens(StoppingCriteria):
+    def __call__(self, input_ids: torch.LongTensor, scores: torch.FloatTensor, **kwargs) -> bool:
+        for stop_ids in stop_token_ids:
+            if torch.eq(input_ids[0][-len(stop_ids):], stop_ids).all():
+                return True
+        return False
+
+
+
 class Init_Agent():
     def __init__(self):
         super().__init__()
@@ -310,14 +458,29 @@ class Init_Agent():
         gen_config.max_new_tokens = 2000
         gen_config.temperature = 1e-10
 
+        tokenizer = transformers.AutoTokenizer.from_pretrained(
+                        model_id,
+                        use_auth_token=hf_token
+                    )
+        stop_list = ['\nHuman:', '\n```\n']
+        global stop_token_ids
+        stop_token_ids = [tokenizer(x)['input_ids'] for x in stop_list]
+        device = f'cuda:{cuda.current_device()}' if cuda.is_available() else 'cpu'
+        stop_token_ids = [torch.LongTensor(x).to(device) for x in stop_token_ids]
+
+        stopping_criteria = StoppingCriteriaList([StopOnTokens()])
+
         # Set up the Hugging Face pipeline for text generation
         pipe = pipeline(
-            task="text-generation",
             model=model_id,
-            return_full_text=True,
             generation_config=gen_config,
             device_map='auto',
-            repetition_penalty=1.1
+            return_full_text=True,  # langchain expects the full text
+            task='text-generation',
+            # we pass model parameters here too
+            stopping_criteria=stopping_criteria,  # without this model rambles during chat
+            temperature=0.001,  # 'randomness' of outputs, 0.0 is the min and 1.0 the max
+            repetition_penalty=1.1  # without this output begins repeating
         ) #max_iterations=2
         return pipe 
     
@@ -366,6 +529,7 @@ os.environ["OPENAI_API_KEY"] = "sk-nZIAH7NUc7ArNbQqezFBT3BlbkFJVAeGmyN4nKg2Z4ozK
 openai.api_key = os.environ["OPENAI_API_KEY"]
 api = HfApi()
 api.token = hf_token
+database_name = 'courses.db'
 if __name__ == "__main__":
 
     
@@ -373,7 +537,18 @@ if __name__ == "__main__":
     image_to_text_tool = ImageToTextTool()
     gen_QT = QuestionTypeGenerator()
     sim_QA = SimilarityQA()
+    vec_store = VectorStore()
+    file_path_list = []
+    for file_path in file_path_list:
+        file_name = file_path
+        class_name = "Forestry"
+        topic_name = "Indiana"
+        file_contents= image_to_text_tool._run()
+        print(file_contents)
+        break
+        vec_store.add_embeddings(self, file_contents, file_name, class_name, topic_name, database_name = database_name)
 
+    exit()
     df = pd.read_csv("manual_qt_gen.csv")
     print(df.head())
 

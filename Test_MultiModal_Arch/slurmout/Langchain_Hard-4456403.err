@@ -1,0 +1,9 @@
+/usr/bin/uuidgen: /apps/spack/gilbreth/apps/anaconda/2020.11-py38-gcc-4.8.5-djkvkvk/lib/libuuid.so.1: no version information available (required by /usr/bin/uuidgen)
+/home/vciroski/.local/lib/python3.8/site-packages/pydot.py:17: UserWarning: `pydot` could not import `dot_parser`, so `pydot` will be unable to parse DOT files. The error was:  No module named 'pyparsing'
+  warnings.warn(
+/home/vciroski/.conda/envs/cent7/2020.11-py38/elab_2/lib/python3.8/site-packages/transformers/utils/hub.py:374: FutureWarning: The `use_auth_token` argument is deprecated and will be removed in v5 of Transformers. Please use `token` instead.
+  warnings.warn(
+/home/vciroski/.conda/envs/cent7/2020.11-py38/elab_2/lib/python3.8/site-packages/transformers/models/auto/tokenization_auto.py:671: FutureWarning: The `use_auth_token` argument is deprecated and will be removed in v5 of Transformers. Please use `token` instead.
+  warnings.warn(
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:08<00:08,  8.28s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:12<00:00,  6.02s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:12<00:00,  6.36s/it]
+Processing queries:   0%|          | 0/77 [00:00<?, ?query/s]Processing queries:   0%|          | 0/77 [00:01<?, ?query/s]

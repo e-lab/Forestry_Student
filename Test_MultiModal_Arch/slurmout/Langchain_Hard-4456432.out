@@ -1,0 +1,46 @@
+RANK: 2
+WORLD_SIZE: 4
+            type                                           question
+0  True or False                Magnolia grandiflora is evergreen. 
+1  True or False             Pacific yew has a rapid growth rate.\t
+2  True or False   Platanus occidentalis is native to the east c...
+3  True or False   The cones red spruce are quite long between 6...
+4  True or False                      Douglas-fir is not a true fir
+            type                                           question
+0  True or False                Magnolia grandiflora is evergreen. 
+1  True or False             Pacific yew has a rapid growth rate.\t
+2  True or False   Platanus occidentalis is native to the east c...
+3  True or False   The cones red spruce are quite long between 6...
+4  True or False                      Douglas-fir is not a true fir
+77
+ Magnolia grandiflora is evergreen.  answer in a True or False format
+ Pacific yew has a rapid growth rate.	 answer in a True or False format
+ Platanus occidentalis is native to the east coast.  answer in a True or False format
+ The cones red spruce are quite long between 6 and 8” in length answer in a True or False format
+ Douglas-fir is not a true fir answer in a True or False format
+ Red pine is considered a hard pine answer in a True or False format
+ The branches of northern white-cedar can take root if the tree falls answer in a True or False format
+ Abies grandis is native to the southeastern United States answer in a True or False format
+ Pinus resinosa is native along the Gulf coast answer in a True or False format
+ Larix laricina is an evergreen conifer. answer in a True or False format
+ Sweetgum is the most common and widely distributed tree in the Mississippi delta answer in a True or False format
+ The twigs of slippery elm are thinner than those of American elm answer in a True or False format
+ Quercus rubra is the most important and widespread of northern oaks answer in a True or False format
+ White spruce is intolerant of shade answer in a True or False format
+ The needles of baldcypress are two-ranked answer in a True or False format
+ Southern magnolia is a nonnative invasive species in the southeastern U.S answer in a True or False format
+ The timber of black oak is sold as red oak. answer in a True or False format
+ Thuja plicata is native to West Virginia and Pennsylvania answer in a True or False format
+ The fruit of bur oak has a fringed cap answer in a True or False format
+ Yellow birch has a terminal bud answer in a True or False format
+ Redwood grows in the fog belt answer in a True or False format
+ Betula papyrifera is the most widely distributed of the native birches. answer in a True or False format
+ Red alder is native to Guatemala answer in a True or False format
+ Magnolia acuminata is deciduous answer in a True or False format
+ The twigs of quaking aspen are grey in color answer in a True or False format
+ Virginia pine is used for reclamation answer in a True or False format
+ The cones of Thuja plicata hang downwards answer in a True or False format
+ The cones of Abies point upward answer in a True or False format
+ The firs discussed in lecture are commonly seen growing in the forests of West Virginia answer in a True or False format
+ The timber of Tsuga heterophylla is sold as “hem/spruce” answer in a True or False format
+ The fruits of eastern Tsuga heterophylla are: A. small purple berries  B. blue colored berries  C. red drupes  D. light brown colored cones answer in a multiple choice format

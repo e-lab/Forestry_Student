@@ -1,0 +1,27 @@
+/usr/bin/uuidgen: /apps/spack/gilbreth/apps/anaconda/2020.11-py38-gcc-4.8.5-djkvkvk/lib/libuuid.so.1: no version information available (required by /usr/bin/uuidgen)
+/home/vciroski/.local/lib/python3.8/site-packages/pydot.py:17: UserWarning: `pydot` could not import `dot_parser`, so `pydot` will be unable to parse DOT files. The error was:  No module named 'pyparsing'
+  warnings.warn(
+Traceback (most recent call last):
+  File "/home/vciroski/.conda/envs/cent7/2020.11-py38/elab_2/lib/python3.8/site-packages/pandas/core/indexes/base.py", line 3653, in get_loc
+    return self._engine.get_loc(casted_key)
+  File "pandas/_libs/index.pyx", line 147, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/index.pyx", line 176, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7080, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7088, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'question'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "langchain_hard.py", line 380, in <module>
+    sim_QA._run(data_path="manual_qt_gen.csv", output_file='EXAM_ANSWERS_manual_qt_gen_no_context.txt')
+  File "langchain_hard.py", line 265, in _run
+    msg = f"{row['question']} answer in a {row['type']} format"
+  File "/home/vciroski/.conda/envs/cent7/2020.11-py38/elab_2/lib/python3.8/site-packages/pandas/core/series.py", line 1007, in __getitem__
+    return self._get_value(key)
+  File "/home/vciroski/.conda/envs/cent7/2020.11-py38/elab_2/lib/python3.8/site-packages/pandas/core/series.py", line 1116, in _get_value
+    loc = self.index.get_loc(label)
+  File "/home/vciroski/.conda/envs/cent7/2020.11-py38/elab_2/lib/python3.8/site-packages/pandas/core/indexes/base.py", line 3655, in get_loc
+    raise KeyError(key) from err
+KeyError: 'question'
+srun: error: gilbreth-k015: task 0: Exited with exit code 1

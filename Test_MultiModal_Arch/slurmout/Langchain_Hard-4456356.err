@@ -1,0 +1,32 @@
+/usr/bin/uuidgen: /apps/spack/gilbreth/apps/anaconda/2020.11-py38-gcc-4.8.5-djkvkvk/lib/libuuid.so.1: no version information available (required by /usr/bin/uuidgen)
+/home/vciroski/.local/lib/python3.8/site-packages/pydot.py:17: UserWarning: `pydot` could not import `dot_parser`, so `pydot` will be unable to parse DOT files. The error was:  No module named 'pyparsing'
+  warnings.warn(
+/home/vciroski/.conda/envs/cent7/2020.11-py38/elab_2/lib/python3.8/site-packages/transformers/utils/hub.py:374: FutureWarning: The `use_auth_token` argument is deprecated and will be removed in v5 of Transformers. Please use `token` instead.
+  warnings.warn(
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:09<00:09,  9.56s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:13<00:00,  6.42s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:13<00:00,  6.90s/it]
+Processing queries:   0%|          | 0/77 [00:00<?, ?query/s]Processing queries:   0%|          | 0/77 [00:00<?, ?query/s]
+Traceback (most recent call last):
+  File "langchain_hard.py", line 397, in <module>
+    sim_QA._run(data_path="manual_qt_gen.csv", output_file='EXAM_ANSWERS_manual_qt_gen_no_context.txt')
+  File "langchain_hard.py", line 279, in _run
+    response = llm(f"{sys_msg} {query}", top_k=top_k)
+  File "/home/vciroski/.conda/envs/cent7/2020.11-py38/elab_2/lib/python3.8/site-packages/transformers/pipelines/text_generation.py", line 208, in __call__
+    return super().__call__(text_inputs, **kwargs)
+  File "/home/vciroski/.conda/envs/cent7/2020.11-py38/elab_2/lib/python3.8/site-packages/transformers/pipelines/base.py", line 1140, in __call__
+    return self.run_single(inputs, preprocess_params, forward_params, postprocess_params)
+  File "/home/vciroski/.conda/envs/cent7/2020.11-py38/elab_2/lib/python3.8/site-packages/transformers/pipelines/base.py", line 1147, in run_single
+    model_outputs = self.forward(model_inputs, **forward_params)
+  File "/home/vciroski/.conda/envs/cent7/2020.11-py38/elab_2/lib/python3.8/site-packages/transformers/pipelines/base.py", line 1046, in forward
+    model_outputs = self._forward(model_inputs, **forward_params)
+  File "/home/vciroski/.conda/envs/cent7/2020.11-py38/elab_2/lib/python3.8/site-packages/transformers/pipelines/text_generation.py", line 271, in _forward
+    generated_sequence = self.model.generate(input_ids=input_ids, attention_mask=attention_mask, **generate_kwargs)
+  File "/home/vciroski/.conda/envs/cent7/2020.11-py38/elab_2/lib/python3.8/site-packages/torch/utils/_contextlib.py", line 115, in decorate_context
+    return func(*args, **kwargs)
+  File "/home/vciroski/.conda/envs/cent7/2020.11-py38/elab_2/lib/python3.8/site-packages/transformers/generation/utils.py", line 1708, in generate
+    logits_warper = self._get_logits_warper(generation_config)
+  File "/home/vciroski/.conda/envs/cent7/2020.11-py38/elab_2/lib/python3.8/site-packages/transformers/generation/utils.py", line 836, in _get_logits_warper
+    warpers.append(TemperatureLogitsWarper(generation_config.temperature))
+  File "/home/vciroski/.conda/envs/cent7/2020.11-py38/elab_2/lib/python3.8/site-packages/transformers/generation/logits_process.py", line 260, in __init__
+    raise ValueError(except_msg)
+ValueError: `temperature` (=0) has to be a strictly positive float, otherwise your next token scores will be invalid.
+srun: error: gilbreth-k017: task 0: Exited with exit code 1
