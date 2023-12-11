@@ -1,25 +1,0 @@
-/usr/bin/uuidgen: /apps/spack/gilbreth/apps/anaconda/2020.11-py38-gcc-4.8.5-djkvkvk/lib/libuuid.so.1: no version information available (required by /usr/bin/uuidgen)
-/home/vciroski/.local/lib/python3.8/site-packages/pydot.py:17: UserWarning: `pydot` could not import `dot_parser`, so `pydot` will be unable to parse DOT files. The error was:  No module named 'pyparsing'
-  warnings.warn(
-/home/vciroski/.conda/envs/cent7/2020.11-py38/elab_2/lib/python3.8/site-packages/transformers/utils/hub.py:374: FutureWarning: The `use_auth_token` argument is deprecated and will be removed in v5 of Transformers. Please use `token` instead.
-  warnings.warn(
-/home/vciroski/.conda/envs/cent7/2020.11-py38/elab_2/lib/python3.8/site-packages/transformers/models/auto/tokenization_auto.py:671: FutureWarning: The `use_auth_token` argument is deprecated and will be removed in v5 of Transformers. Please use `token` instead.
-  warnings.warn(
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:10<00:10, 10.96s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:17<00:00,  8.62s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:17<00:00,  8.97s/it]
-Processing queries:   0%|          | 0/77 [00:00<?, ?query/s]Processing queries:   1%|▏         | 1/77 [00:01<01:25,  1.12s/query]Processing queries:   3%|▎         | 2/77 [00:01<00:43,  1.70query/s]Processing queries:   4%|▍         | 3/77 [00:01<00:30,  2.40query/s]Processing queries:   5%|▌         | 4/77 [00:02<00:38,  1.89query/s]Processing queries:   6%|▋         | 5/77 [00:02<00:29,  2.41query/s]Processing queries:   8%|▊         | 6/77 [00:02<00:24,  2.90query/s]Processing queries:   9%|▉         | 7/77 [00:02<00:20,  3.49query/s]Processing queries:  10%|█         | 8/77 [00:03<00:18,  3.81query/s]Processing queries:  12%|█▏        | 9/77 [00:03<00:16,  4.06query/s]Processing queries:  13%|█▎        | 10/77 [00:03<00:15,  4.25query/s]/home/vciroski/.conda/envs/cent7/2020.11-py38/elab_2/lib/python3.8/site-packages/transformers/pipelines/base.py:1101: UserWarning: You seem to be using the pipelines sequentially on GPU. In order to maximize efficiency please use a dataset
-  warnings.warn(
-Processing queries:  14%|█▍        | 11/77 [00:04<00:23,  2.80query/s]Processing queries:  16%|█▌        | 12/77 [00:04<00:19,  3.35query/s]Processing queries:  17%|█▋        | 13/77 [00:04<00:26,  2.41query/s]Processing queries:  18%|█▊        | 14/77 [00:05<00:22,  2.83query/s]Processing queries:  19%|█▉        | 15/77 [00:05<00:19,  3.15query/s]Processing queries:  21%|██        | 16/77 [00:06<00:26,  2.34query/s]Processing queries:  22%|██▏       | 17/77 [00:06<00:21,  2.76query/s]Processing queries:  23%|██▎       | 18/77 [00:06<00:18,  3.16query/s]Processing queries:  25%|██▍       | 19/77 [00:06<00:16,  3.51query/s]Processing queries:  26%|██▌       | 20/77 [00:06<00:14,  3.81query/s]Processing queries:  27%|██▋       | 21/77 [00:07<00:13,  4.05query/s]Processing queries:  29%|██▊       | 22/77 [00:07<00:12,  4.23query/s]Processing queries:  30%|██▉       | 23/77 [00:07<00:11,  4.66query/s]Processing queries:  31%|███       | 24/77 [00:07<00:11,  4.69query/s]Processing queries:  32%|███▏      | 25/77 [00:07<00:10,  5.04query/s]Processing queries:  34%|███▍      | 26/77 [00:08<00:14,  3.41query/s]Processing queries:  35%|███▌      | 27/77 [00:08<00:14,  3.45query/s]Processing queries:  36%|███▋      | 28/77 [00:08<00:14,  3.49query/s]Processing queries:  38%|███▊      | 29/77 [00:11<00:47,  1.00query/s]Processing queries:  39%|███▉      | 30/77 [00:11<00:36,  1.30query/s]Processing queries:  39%|███▉      | 30/77 [00:12<00:19,  2.45query/s]
-Traceback (most recent call last):
-  File "langchain_hard.py", line 293, in _run
-    answers.append(f"{response[0]['generated_text']},{tmp[0]},{tmp[1]}")
-IndexError: list index out of range
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "langchain_hard.py", line 434, in <module>
-    sim_QA._run(data_path="manual_qt_gen.csv", output_file='EXAM_ANSWERS_manual_qt_gen_no_context.txt')
-  File "langchain_hard.py", line 297, in _run
-    tmp = response['generated_text'].split("Only provide the final answer as the output")[-1]
-TypeError: list indices must be integers or slices, not str
-srun: error: gilbreth-k017: task 0: Exited with exit code 1

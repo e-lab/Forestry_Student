@@ -2,9 +2,7 @@
 /home/vciroski/.local/lib/python3.8/site-packages/pydot.py:17: UserWarning: `pydot` could not import `dot_parser`, so `pydot` will be unable to parse DOT files. The error was:  No module named 'pyparsing'
   warnings.warn(
 Traceback (most recent call last):
-  File "langchain_hard.py", line 299, in <module>
-    class StopOnTokens(StoppingCriteria):
-  File "langchain_hard.py", line 300, in StopOnTokens
-    def __call__(self, input_ids: torch.LongTensor, scores: torch.FloatTensor, **kwargs) -> bool:
-NameError: name 'torch' is not defined
-srun: error: gilbreth-k017: task 0: Exited with exit code 1
+  File "langchain_hard.py", line 552, in <module>
+    file_path_list.extend(pdf_files)
+NameError: name 'file_path_list' is not defined
+srun: error: gilbreth-k035: task 0: Exited with exit code 1

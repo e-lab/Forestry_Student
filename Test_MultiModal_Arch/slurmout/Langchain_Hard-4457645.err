@@ -2,9 +2,7 @@
 /home/vciroski/.local/lib/python3.8/site-packages/pydot.py:17: UserWarning: `pydot` could not import `dot_parser`, so `pydot` will be unable to parse DOT files. The error was:  No module named 'pyparsing'
   warnings.warn(
 Traceback (most recent call last):
-  File "langchain_hard.py", line 15, in <module>
-    import fitz
-  File "/home/vciroski/.local/lib/python3.8/site-packages/fitz/__init__.py", line 1, in <module>
-    from frontend import *
-ModuleNotFoundError: No module named 'frontend'
-srun: error: gilbreth-k027: task 0: Exited with exit code 1
+  File "langchain_hard.py", line 558, in <module>
+    file_contents= image_to_text_tool._run()
+TypeError: _run() missing 1 required positional argument: 'urls'
+srun: error: gilbreth-k035: task 0: Exited with exit code 1

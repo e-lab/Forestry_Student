@@ -29,10 +29,11 @@ import sqlite3
 import json
 import time
 import os
+import glob
 
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
-
+print("Starting code...")
 
 
 class ImageToTextTool(BaseTool):
@@ -532,18 +533,31 @@ api.token = hf_token
 database_name = 'courses.db'
 if __name__ == "__main__":
 
-    
+    print("init tools...")
     # Initialize the tool
     image_to_text_tool = ImageToTextTool()
     gen_QT = QuestionTypeGenerator()
     sim_QA = SimilarityQA()
     vec_store = VectorStore()
+    
+
+
+    print("Getting PDFS...")
+    # Directory where the PDF files are located
+    pdf_directory = "pdfs/"
+    # Use glob to get a list of PDF files in the directory
+    pdf_files = glob.glob(os.path.join(pdf_directory, '*.pdf'))
     file_path_list = []
+    # Add the file paths to the file_path_list
+    file_path_list.extend(pdf_files)
+
+    print ("Embbeding Data...")
     for file_path in file_path_list:
         file_name = file_path
+        print(file_name)
         class_name = "Forestry"
         topic_name = "Indiana"
-        file_contents= image_to_text_tool._run()
+        file_contents= image_to_text_tool._run(urls=file_path)
         print(file_contents)
         break
         vec_store.add_embeddings(self, file_contents, file_name, class_name, topic_name, database_name = database_name)
