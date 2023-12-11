@@ -372,7 +372,10 @@ if __name__ == "__main__":
     gen_QT = QuestionTypeGenerator()
     sim_QA = SimilarityQA()
 
-    sim_QA._run(data_path="question_type.csv")
+    df = pd.read_csv("manual_qt_gen.csv")
+    print(df.head())
+
+    sim_QA._run(data_path="manual_qt_gen.csv", output_file='EXAM_ANSWERS_manual_qt_gen_no_context.txt')
     """
 
     tools = [gen_QT, sim_QA]

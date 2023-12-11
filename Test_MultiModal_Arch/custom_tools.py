@@ -2,6 +2,7 @@ from langchain.tools import BaseTool
 from transformers import pipeline, AutoFeatureExtractor
 
 from PIL import Image
+import matplotlib.pyplot as plt
 import requests
 from io import BytesIO
 import os
@@ -51,38 +52,50 @@ class Image_to_Text(BaseTool):
                 return []
 
     def _run(self, urls):
-        print(urls)
         results = []
         if type(urls) == str:
             urls = [urls]
         elif type(urls) == list:
-            pass 
+            pass
         else:
-            return "Please provide us with a list of the URLS"
+            return "Please provide us with a list of the URLs"
+
         for url in urls:
             images = self._process_url_or_path(url)
             if images:
                 for i, image in enumerate(images):
                     response = pipe(
-                        image, 
+                        image,
                         max_new_tokens=pipe.tokenizer.model_max_length
                     )
                     text = response[0].get('generated_text', '')
-                    #print(f"Text for {url} - Page {i + 1}:\n{text}")
-                    results.append(text)
-                    print(len(results))
-        print(results)
-        return results[0]
+                    results.append((image, text))
 
-    async def _arun(self, urls):
-        raise NotImplementedError("custom_search does not support async")
+        return results
+
+    def visualize(self, results):
+        for i, (image, text) in enumerate(results):
+            fig, ax = plt.subplots(1, 2, figsize=(12, 6))
+
+            # Display the image on the left side
+            ax[0].imshow(image)
+            ax[0].axis('off')
+            ax[0].set_title(f"Image {i + 1}")
+
+            # Display the extracted text on the right side with word wrapping
+            ax[1].text(0.1, 0.5, text, fontsize=8, va='center', wrap=True)
+            ax[1].axis('off')
+            ax[1].set_title(f"OCR {i + 1}")
+
+            plt.show()
+
 
 # Example usage:
 if __name__ == '__main__':
     urls = [
         "/Users/viktorciroski/Documents/Github/Forestry_Student/Test_Results/FOR205_Final Exam_Fall 2014_ Sample A 2.pdf"
     ]
-    
-    tool = Image2Text()
+
+    tool = Image_to_Text()
     results = tool._run(urls)
-    print("All Results:", results)
+    tool.visualize(results)
