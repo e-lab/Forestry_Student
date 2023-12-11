@@ -318,7 +318,7 @@ class Init_Agent():
             generation_config=gen_config,
             device_map='auto',
             repetition_penalty=1.1
-        )
+        ) #max_iterations=2
         return pipe 
     
     def comp(self, sys_msg, PROMPT, MaxToken=3000, outputs=3): 
@@ -342,7 +342,7 @@ class Init_Agent():
 
 
 
-    def get_agent(self, agent_type=AgentType.ZERO_SHOT_REACT_DESCRIPTION, tools = [QuestionTypeGenerator()]):
+    def get_agent(self, agent_type=AgentType.ZERO_SHOT_REACT_DESCRIPTION, tools = [QuestionTypeGenerator()], max_iterations=5):
         
 
         # Initialize the agent
@@ -351,12 +351,14 @@ class Init_Agent():
         if len(self.tools) <1:
             self.agent = initialize_agent(llm=llm, 
                                           agent=agent_type, 
-                                          verbose=True)   
+                                          verbose=True,
+                                          max_iterations=max_iterations)   
         else: 
             self.agent = initialize_agent(self.tools,
                                         llm,
                                         agent=agent_type, 
-                                        verbose=True)
+                                        verbose=True,
+                                        max_iterations=max_iterations)
         return self.agent
 
 hf_token = "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"
