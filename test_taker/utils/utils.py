@@ -33,7 +33,6 @@ import glob
 
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
-print("Starting code...")
 
 
 class ImageToTextTool(BaseTool):
