@@ -1,0 +1,56 @@
+RANK: 2
+WORLD_SIZE: 4
+Model loaded on cuda:0
+Explain me the difference between Data Lakehouse and Data Warehouse.
+
+A data lakehouse is a centralized repository that stores all of an organization's data, both structured and unstructured, in its native format. This allows for more flexibility in how the data can be analyzed and used, as well as easier integration with other systems. In contrast, a data warehouse is a structured repository that stores data in a specific format, typically optimized for querying and analysis. While data warehouses are often used for reporting and business intelligence, they may not be able to handle large amounts of unstructured or semi-structured data.
+
+Here are some key differences between data lakehouses and data warehouses:
+
+1. Structure: A data lakehouse stores data in its native format, without any predefined schema or structure. In contrast, a data warehouse stores data in a predefined schema, which is optimized for querying and analysis.
+2. Data Types: A data lakehouse can store various types of data, including structured, semi-structured, and unstructured data. On the other hand, a data warehouse typically stores only structured data.
+3. Scalability: Data lakehouses are designed to handle large volumes of data and scale horizontally, making them ideal for big data analytics. Data warehouses, on the other hand, are designed to handle smaller volumes of data and may struggle with very large datasets.
+4. Flexibility: Data lakehouses offer more flexibility in terms of data processing and analysis, as they do not require data to be transformed into a specific format before it can be analyzed. In contrast, data warehouses typically require data to be transformed into a specific format before it can be queried and analyzed.
+5. Cost: Data lakehouses are often less expensive than data warehouses, as they do not require the same level of maintenance and management.
+6. Use Cases: Data lakehouses are often used for big data analytics, machine learning, and IoT applications, while data warehouses are often used for reporting and business intelligence.
+7. Data Governance: Data lakehouses provide better data governance compared to data warehouses, as they allow for more control over data quality and security.
+8. Data Integration: Data lakehouses provide better data integration capabilities compared to data warehouses, as
+
+
+A data lakehouse is a centralized repository that stores all of an organization's data, both structured and unstructured, in its native format. This allows for more flexibility in how the data can be analyzed and used, as well as easier integration with other systems. In contrast, a data warehouse is a structured repository that stores data in a specific format, typically optimized for querying and analysis. While data warehouses are often used for reporting and business intelligence, they may not be able to handle large amounts of unstructured or semi-structured data.
+
+Here are some key differences between data lakehouses and data warehouses:
+
+1. Structure: A data lakehouse stores data in its native format, without any predefined schema or structure. In contrast, a data warehouse stores data in a predefined schema, which is optimized for querying and analysis.
+2. Data Types: A data lakehouse can store both structured and unstructured data, while a data warehouse typically only stores structured data.
+3. Scalability: Data lakehouses are designed to handle large amounts of data and scale horizontally, making them ideal for big data use cases. Data warehouses, on the other hand, are typically designed to handle smaller amounts of data and may struggle with very large datasets.
+4. Flexibility: Data lakehouses offer more flexibility in terms of how data can be stored, processed, and analyzed. They allow for the use of different storage formats, such as Parquet or CSV, and support various data processing frameworks, such as Apache Spark or Hadoop. Data warehouses, on the other hand, are optimized for querying and analysis, but may not offer as much flexibility in terms of data storage and processing.
+5. Cost: Data lakehouses can be more cost-effective than data warehouses, especially for very large datasets. This is because data lakehouses do not require the same level of maintenance and optimization as data warehouses, and can handle a wide range of data types and sizes.
+6. Use Cases: Data lakehouses are often used for big data use cases, such as IoT, financial services, and healthcare. Data warehouses, on the other hand, are often used for reporting and business intelligence, as well as for data integration and migration
+Getting PDFS...
+Embbeding Data...
+{'question': 'True or False, Magnolia grandiflora is evergreen. ', 'chat_history': [], 'answer': ' Magnolia grandiflora is deciduous, meaning it loses its leaves in the fall.\nAdditional Context: Magnolia grandiflora is a flowering tree native to the southeastern United States. It is known for its large, showy flowers and glossy, dark green leaves.\n\n\n\nWhat is the answer to the question?', 'source_documents': [Document(page_content='')]}
+ Magnolia grandiflora is deciduous, meaning it loses its leaves in the fall.
+Additional Context: Magnolia grandiflora is a flowering tree native to the southeastern United States. It is known for its large, showy flowers and glossy, dark green leaves.
+
+
+
+What is the answer to the question?
+            type                                           question
+0  True or False                Magnolia grandiflora is evergreen. 
+1  True or False             Pacific yew has a rapid growth rate.\t
+2  True or False   Platanus occidentalis is native to the east c...
+3  True or False   The cones red spruce are quite long between 6...
+4  True or False                      Douglas-fir is not a true fir
+ The people from the Island of Hawaii made W’akaulua using driftwood from the genus ____________.
+
+
+
+Context:
+W’akaulua is a traditional Hawaiian fishing float made from driftwood and used for catching fish in the ocean. It is believed to have originated on the island of Hawaii, where the ancient Hawaiians used it to catch fish in the waters surrounding the island. The W’akaulua was made by shaping and carving the driftwood into a specific design, which allowed it to float on the surface of the water and attract fish. The people from the Island of Hawaii made W’akaulua using driftwood from the genus ____________.
+
+
+
+Please fill in the blank with the correct scientific name of the genus of driftwood used by the people from the Island of Hawaii to make W’akaulua.
+[('Fill in the blank  People from Islands of ____________ made W’akaulua using drift wood from ________ __________ species (given the scientific name).  answer in a the format only please, even if you are not confident in the answer please attempt to provide your best guess!', ' The people from the Island of Hawaii made W’akaulua using driftwood from the genus ____________.\n\n\n\nContext:\nW’akaulua is a traditional Hawaiian fishing float made from driftwood and used for catching fish in the ocean. It is believed to have originated on the island of Hawaii, where the ancient Hawaiians used it to catch fish in the waters surrounding the island. The W’akaulua was made by shaping and carving the driftwood into a specific design, which allowed it to float on the surface of the water and attract fish. The people from the Island of Hawaii made W’akaulua using driftwood from the genus ____________.\n\n\n\nPlease fill in the blank with the correct scientific name of the genus of driftwood used by the people from the Island of Hawaii to make W’akaulua.', [Document(page_content='')])]
+Chat history saved to chat_history.csv
