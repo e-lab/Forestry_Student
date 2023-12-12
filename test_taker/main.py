@@ -130,8 +130,9 @@ chunks = ''
 print ("Embbeding Data...")
 
 from utils.utils import ImageToTextTool
-
+print(file_path_list)
 for file_path in file_path_list:
+    print(file_path)
     file_contents = ImageToTextTool()._run(urls=file_path)
     #file_contents = read_pdf(file_path)
     chunks += file_contents 

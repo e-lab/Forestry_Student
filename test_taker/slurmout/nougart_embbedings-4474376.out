@@ -1,0 +1,36 @@
+RANK: 2
+WORLD_SIZE: 4
+Model loaded on cuda:0
+Explain me the difference between Data Lakehouse and Data Warehouse.
+
+A data lakehouse is a centralized repository that stores all of an organization's data, both structured and unstructured, in its native format. This allows for more flexibility in how the data can be analyzed and used, as well as easier integration with other systems. In contrast, a data warehouse is a structured repository that stores data in a specific format, making it optimized for querying and analysis. While data warehouses are typically faster and more efficient than data lakehouses, they may not be able to handle large amounts of unstructured data or complex queries.
+
+Here are some key differences between data lakehouses and data warehouses:
+
+1. Structure: A data lakehouse stores data in its native format, without any predefined schema or structure. A data warehouse, on the other hand, stores data in a predefined schema or structure, which makes it easier to query and analyze.
+2. Scalability: Data lakehouses are designed to handle large amounts of unstructured data and can scale horizontally by adding more nodes to the cluster. Data warehouses, while scalable, may struggle to handle very large amounts of data or complex queries.
+3. Flexibility: Data lakehouses provide more flexibility in how data can be analyzed and used, as they store data in its native format. Data warehouses, on the other hand, are optimized for querying and analysis, but may not be able to handle complex queries or data transformations.
+4. Cost: Data lakehouses tend to be less expensive than data warehouses, especially when dealing with large amounts of unstructured data. This is because data lakehouses do not require the same level of processing power or storage capacity as data warehouses.
+5. Use cases: Data lakehouses are often used for big data analytics, machine learning, and IoT applications, where large amounts of unstructured data need to be stored and processed. Data warehouses, on the other hand, are often used for reporting and business intelligence, where structured data needs to be easily accessible and queryable.
+6. Data types: Data lakehouses can store both structured and unstructured data, including text files, images, videos, and audio files. Data warehouses, on the other hand, typically store only structured data, such
+
+
+A data lakehouse is a centralized repository that stores all of an organization's data, both structured and unstructured, in its native format. This allows for more flexibility in how the data can be analyzed and used, as well as easier integration with other systems.
+
+On the other hand, a data warehouse is a repository that stores data in a structured and organized manner, making it easier to query and analyze. The data in a data warehouse is typically cleaned, transformed, and formatted into a specific schema before being loaded into the system.
+
+Here are some key differences between a data lakehouse and a data warehouse:
+
+1. Structure: A data lakehouse stores data in its native format, without any predefined structure or schema. In contrast, a data warehouse stores data in a structured and organized manner, with a defined schema.
+2. Data Types: A data lakehouse can store both structured and unstructured data, such as text documents, images, and videos. A data warehouse typically only stores structured data, such as relational databases.
+3. Scalability: A data lakehouse is designed to handle large volumes of data and scale horizontally, which means it can handle growing data volumes by adding more nodes to the cluster. A data warehouse, on the other hand, may struggle to handle very large data volumes and may require more complex scaling solutions.
+4. Querying: A data lakehouse allows for more flexible querying options, as the data is stored in its native format and can be queried using SQL or other query languages. A data warehouse, on the other hand, requires data to be transformed into a specific schema before it can be queried.
+5. Cost: A data lakehouse can be more cost-effective than a data warehouse, especially for organizations that have a lot of unstructured data. This is because a data lakehouse does not require the same level of data transformation and cleansing as a data warehouse.
+6. Use Cases: A data lakehouse is often used for big data analytics, machine learning, and IoT applications, where the ability to store and process large amounts of unstructured data is important. A data warehouse, on the other hand, is often used for reporting and business intelligence, where the data is already structured and organized.
+
+Getting PDFS...
+Embbeding Data...
+[]
+Chunks data
+
+END
