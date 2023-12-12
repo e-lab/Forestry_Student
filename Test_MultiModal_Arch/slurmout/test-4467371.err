@@ -1,0 +1,4 @@
+/usr/bin/uuidgen: /apps/spack/gilbreth/apps/anaconda/2020.11-py38-gcc-4.8.5-djkvkvk/lib/libuuid.so.1: no version information available (required by /usr/bin/uuidgen)
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+slurmstepd: error: *** JOB 4467371 ON gilbreth-k043 CANCELLED AT 2023-12-11T22:17:03 ***
+slurmstepd: error: *** STEP 4467371.0 ON gilbreth-k043 CANCELLED AT 2023-12-11T22:17:03 ***

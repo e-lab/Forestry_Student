@@ -1,0 +1,8 @@
+/usr/bin/uuidgen: /apps/spack/gilbreth/apps/anaconda/2020.11-py38-gcc-4.8.5-djkvkvk/lib/libuuid.so.1: no version information available (required by /usr/bin/uuidgen)
+/home/vciroski/.local/lib/python3.8/site-packages/pydot.py:17: UserWarning: `pydot` could not import `dot_parser`, so `pydot` will be unable to parse DOT files. The error was:  No module named 'pyparsing'
+  warnings.warn(
+Traceback (most recent call last):
+  File "langchain_hard.py", line 552, in <module>
+    file_path_list.extend(pdf_files)
+NameError: name 'file_path_list' is not defined
+srun: error: gilbreth-k035: task 0: Exited with exit code 1

@@ -1,6 +1,10 @@
 from torch import cuda, bfloat16
 import transformers
+<<<<<<< HEAD
 """
+=======
+
+>>>>>>> 7f1434fa29bf90cbee4485ba04b4f6e776d1fd56
 model_id = 'meta-llama/Llama-2-7b-chat-hf'
 
 device = f'cuda:{cuda.current_device()}' if cuda.is_available() else 'cpu'
@@ -82,10 +86,16 @@ llm = HuggingFacePipeline(pipeline=generate_text)
 # checking again that everything is working fine
 res = llm(prompt="Explain me the difference between Data Lakehouse and Data Warehouse.")
 print(res)
+<<<<<<< HEAD
 print(print(res[0]["generated_text"]))
 
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 """
+=======
+
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+
+>>>>>>> 7f1434fa29bf90cbee4485ba04b4f6e776d1fd56
 def split_to_chunks(data, chunk_size=1000, chunk_overlap=100):
     """
     Splits a given data string into chunks of specified size with an optional overlap.
@@ -139,7 +149,11 @@ for file_path in file_path_list:
     chunks += file_contents 
     #add_embeddings(file_contents)#, file.filename, class_name, topic_name, database_name)
 
+<<<<<<< HEAD
 print(chunks)
+=======
+#print(chunks)
+>>>>>>> 7f1434fa29bf90cbee4485ba04b4f6e776d1fd56
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.vectorstores import FAISS
 global vectorstore
@@ -149,9 +163,54 @@ model_kwargs = {"device": "cuda"}
 embeddings = HuggingFaceEmbeddings(model_name=model_name, model_kwargs=model_kwargs)
 all_splits=split_to_chunks(chunks, chunk_size=1000, chunk_overlap=100)
 # storing embeddings in the vector store
+<<<<<<< HEAD
 
+=======
+#all_splits = ['']
+>>>>>>> 7f1434fa29bf90cbee4485ba04b4f6e776d1fd56
 vectorstore = FAISS.from_texts(all_splits, embeddings)
 
 from langchain.chains import ConversationalRetrievalChain
 
 chain = ConversationalRetrievalChain.from_llm(llm, vectorstore.as_retriever(), return_source_documents=True)
+<<<<<<< HEAD
+=======
+
+chat_history = []
+
+query = "True or False, Magnolia grandiflora is evergreen. "
+result = chain({"question": query, "chat_history": chat_history})
+print(result)
+print(result['answer'])
+
+chat_history = []
+
+import pandas as pd 
+df = pd.read_csv("manual_qt_gen.csv")
+print(df.head())
+result_dict_list = []
+for index, row in df.iterrows():
+    # Access row values using column names
+    query = f"{row['type']} {row['question']} answer in a the format only please, even if you are not confident in the answer please attempt to provide your best guess!"
+    result = chain({"question": query, "chat_history": []})
+    chat_history = [(query, result["answer"], result["source_documents"])]
+    result_dict_list.append({
+        "index": index,
+        "query": query,
+        "answer": result["answer"].replace(",", "").replace("\n", ""),
+        "source_documents": result["source_documents"],
+    })
+    #break
+
+
+print(result['answer'])
+print(chat_history)
+
+chat_history_df = pd.DataFrame(result_dict_list)
+
+# Save the DataFrame to a CSV file
+csv_file_path = "chat_history.csv"
+chat_history_df.to_csv(csv_file_path, index=False)
+
+print(f"Chat history saved to {csv_file_path}")
+>>>>>>> 7f1434fa29bf90cbee4485ba04b4f6e776d1fd56

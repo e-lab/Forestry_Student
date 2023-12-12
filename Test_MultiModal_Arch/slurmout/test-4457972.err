@@ -1,0 +1,45 @@
+/usr/bin/uuidgen: /apps/spack/gilbreth/apps/anaconda/2020.11-py38-gcc-4.8.5-djkvkvk/lib/libuuid.so.1: no version information available (required by /usr/bin/uuidgen)
+/home/vciroski/.local/lib/python3.8/site-packages/pydot.py:17: UserWarning: `pydot` could not import `dot_parser`, so `pydot` will be unable to parse DOT files. The error was:  No module named 'pyparsing'
+  warnings.warn(
+/home/vciroski/.conda/envs/cent7/2020.11-py38/elab_2/lib/python3.8/site-packages/transformers/utils/hub.py:123: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+/home/vciroski/.conda/envs/cent7/2020.11-py38/elab_2/lib/python3.8/site-packages/transformers/models/auto/configuration_auto.py:1067: FutureWarning: The `use_auth_token` argument is deprecated and will be removed in v5 of Transformers. Please use `token` instead.
+  warnings.warn(
+/home/vciroski/.conda/envs/cent7/2020.11-py38/elab_2/lib/python3.8/site-packages/transformers/models/auto/auto_factory.py:472: FutureWarning: The `use_auth_token` argument is deprecated and will be removed in v5 of Transformers. Please use `token` instead.
+  warnings.warn(
+Downloading shards:   0%|          | 0/2 [00:00<?, ?it/s]Downloading shards: 100%|██████████| 2/2 [00:00<00:00, 806.98it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:08<00:08,  8.74s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:12<00:00,  6.04s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:12<00:00,  6.44s/it]
+/home/vciroski/.conda/envs/cent7/2020.11-py38/elab_2/lib/python3.8/site-packages/transformers/models/auto/tokenization_auto.py:690: FutureWarning: The `use_auth_token` argument is deprecated and will be removed in v5 of Transformers. Please use `token` instead.
+  warnings.warn(
+.gitattributes:   0%|          | 0.00/1.18k [00:00<?, ?B/s].gitattributes: 100%|██████████| 1.18k/1.18k [00:00<00:00, 1.34MB/s]
+1_Pooling/config.json:   0%|          | 0.00/190 [00:00<?, ?B/s]1_Pooling/config.json: 100%|██████████| 190/190 [00:00<00:00, 177kB/s]
+README.md:   0%|          | 0.00/10.6k [00:00<?, ?B/s]README.md: 100%|██████████| 10.6k/10.6k [00:00<00:00, 32.2MB/s]
+config.json:   0%|          | 0.00/571 [00:00<?, ?B/s]config.json: 100%|██████████| 571/571 [00:00<00:00, 2.19MB/s]
+config_sentence_transformers.json:   0%|          | 0.00/116 [00:00<?, ?B/s]config_sentence_transformers.json: 100%|██████████| 116/116 [00:00<00:00, 430kB/s]
+data_config.json:   0%|          | 0.00/39.3k [00:00<?, ?B/s]data_config.json: 100%|██████████| 39.3k/39.3k [00:00<00:00, 22.2MB/s]
+pytorch_model.bin:   0%|          | 0.00/438M [00:00<?, ?B/s]pytorch_model.bin:   5%|▍         | 21.0M/438M [00:00<00:03, 122MB/s]pytorch_model.bin:  10%|▉         | 41.9M/438M [00:00<00:02, 149MB/s]pytorch_model.bin:  17%|█▋        | 73.4M/438M [00:00<00:01, 183MB/s]pytorch_model.bin:  24%|██▍       | 105M/438M [00:00<00:01, 203MB/s] pytorch_model.bin:  31%|███       | 136M/438M [00:00<00:01, 213MB/s]pytorch_model.bin:  38%|███▊      | 168M/438M [00:00<00:01, 220MB/s]pytorch_model.bin:  45%|████▌     | 199M/438M [00:01<00:01, 197MB/s]pytorch_model.bin:  50%|█████     | 220M/438M [00:01<00:01, 172MB/s]pytorch_model.bin:  57%|█████▋    | 252M/438M [00:01<00:01, 186MB/s]pytorch_model.bin:  65%|██████▍   | 283M/438M [00:01<00:00, 192MB/s]pytorch_model.bin:  69%|██████▉   | 304M/438M [00:01<00:00, 150MB/s]pytorch_model.bin:  74%|███████▍  | 325M/438M [00:01<00:00, 147MB/s]pytorch_model.bin:  79%|███████▉  | 346M/438M [00:02<00:00, 149MB/s]pytorch_model.bin:  84%|████████▍ | 367M/438M [00:02<00:00, 148MB/s]pytorch_model.bin:  91%|█████████ | 398M/438M [00:02<00:00, 163MB/s]pytorch_model.bin:  98%|█████████▊| 430M/438M [00:02<00:00, 182MB/s]pytorch_model.bin: 100%|██████████| 438M/438M [00:02<00:00, 174MB/s]
+sentence_bert_config.json:   0%|          | 0.00/53.0 [00:00<?, ?B/s]sentence_bert_config.json: 100%|██████████| 53.0/53.0 [00:00<00:00, 49.0kB/s]
+special_tokens_map.json:   0%|          | 0.00/239 [00:00<?, ?B/s]special_tokens_map.json: 100%|██████████| 239/239 [00:00<00:00, 384kB/s]
+tokenizer.json:   0%|          | 0.00/466k [00:00<?, ?B/s]tokenizer.json: 100%|██████████| 466k/466k [00:00<00:00, 11.5MB/s]
+tokenizer_config.json:   0%|          | 0.00/363 [00:00<?, ?B/s]tokenizer_config.json: 100%|██████████| 363/363 [00:00<00:00, 599kB/s]
+train_script.py:   0%|          | 0.00/13.1k [00:00<?, ?B/s]train_script.py: 100%|██████████| 13.1k/13.1k [00:00<00:00, 22.5MB/s]
+vocab.txt:   0%|          | 0.00/232k [00:00<?, ?B/s]vocab.txt: 100%|██████████| 232k/232k [00:00<00:00, 10.0MB/s]
+modules.json:   0%|          | 0.00/349 [00:00<?, ?B/s]modules.json: 100%|██████████| 349/349 [00:00<00:00, 568kB/s]
+Traceback (most recent call last):
+  File "/home/vciroski/.local/lib/python3.8/site-packages/langchain/vectorstores/faiss.py", line 53, in dependable_faiss_import
+    import faiss
+ModuleNotFoundError: No module named 'faiss'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "test.py", line 152, in <module>
+    vectorstore = FAISS.from_texts(all_splits, embeddings)
+  File "/home/vciroski/.local/lib/python3.8/site-packages/langchain/vectorstores/faiss.py", line 912, in from_texts
+    return cls.__from(
+  File "/home/vciroski/.local/lib/python3.8/site-packages/langchain/vectorstores/faiss.py", line 866, in __from
+    faiss = dependable_faiss_import()
+  File "/home/vciroski/.local/lib/python3.8/site-packages/langchain/vectorstores/faiss.py", line 55, in dependable_faiss_import
+    raise ImportError(
+ImportError: Could not import faiss python package. Please install it with `pip install faiss-gpu` (for CUDA supported GPU) or `pip install faiss-cpu` (depending on Python version).
+srun: error: gilbreth-k035: task 0: Exited with exit code 1
