@@ -110,7 +110,7 @@ class ChatBot:
         self.load_database(database_name)
         # Process the user's question and get the most similar embedding from the database
         #print(query)
-        vector_content, _, similarity_score = np.array(get_most_similar_embbeding_for_question(self.cursor,query))
+        vector_content, _, file_name, similarity_score = np.array(get_most_similar_embbeding_for_question(self.cursor,query))
         #print(similarity_score)
         # Check similarity threshold and respond accordingly
         if similarity_score < 0.6:
@@ -136,7 +136,7 @@ class ChatBot:
                 print(f"\n\n\n {llm_response}")
                 print(f"\n\nLLM Response:\n\n{llm_response}\n")
                 print(f"Source: \n\n{vector_content}______________________\n\n")
-                chat_history.append({'user': False, 'message': f"{llm_response} \n\n Source: {vector_content}"})
+                chat_history.append({'user': False, 'message': f"{llm_response} \n\n Cotent: {vector_content}\n\nSource: {file_name}"})
                 
         return chat_history
 
