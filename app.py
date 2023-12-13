@@ -12,7 +12,8 @@ app = Flask(__name__, static_url_path='/static')
 app = Flask(__name__, template_folder='templates')
 app.secret_key = 'your_secret_key'
 app = Flask(__name__)
-chat_history = []
+global chat_history
+chat_history = [{'user': False, 'message': f"Hello my name is FIRST (Forest Intellect Research & \nTechnology System), how can i help you today?"}]
 chatbot = BCB.ChatBot()
 database_name='courses.db'
 
@@ -20,7 +21,7 @@ database_name='courses.db'
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', chat_history=chat_history)
 
 
 
@@ -102,9 +103,8 @@ def read_pdf(file_path):
 @app.route('/process_input', methods=['POST'])
 def process_input():
     print("Chat Box")
-    global chat_history
     user_input = request.form.get('user_input')
-    
+    global chat_history
     # Add user input to the chat history
     chat_history.append({'user': True, 'message': user_input})
     chat_history = chatbot.process_question(user_input, database_name, chat_history)
