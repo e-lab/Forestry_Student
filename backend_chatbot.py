@@ -117,12 +117,10 @@ class ChatBot:
             # If similarity is low, search the web for the answer
             print("\n\nWe appear to lack a strong enough similarity between our database and your question...\nWe are searching the web for your answer!")
             llm_response = self.qa_chain({"question": query})
-            print(f"\n\nLLM Response:\n\n{llm_response['answer']}\n")
-            print(f"Sources:\n\n  {llm_response['sources']}\n______________________\n\n")
+            print(f"\n\nLLM Response:\n\n{llm_response['answer']}\n{llm_response['sources']}")
 
             chat_history.append({'user': False, 'message': "We appear to lack a strong enough similarity between our database and your question...\nWe are searching the web for your answer!"})
-            chat_history.append({'user': False, 'message': f"{llm_response['answer']}"})
-            chat_history.append({'user': False, 'message': f"Sources:\n\n  {llm_response['sources']}"})
+            chat_history.append({'user': False, 'message': f"{llm_response['answer']}\nSources:\n\n  {llm_response['sources']}"})
             #return chat_history
         else:
             # If similarity is high, use the local database
@@ -133,14 +131,13 @@ class ChatBot:
                 print(f"\n\nLLM Response:\n\n{llm_response['answer']}\n")
                 print(f"Sources:\n\n  {llm_response['sources']}\n______________________\n\n")
                 chat_history.append({'user': False, 'message': "We appear to lack a strong enough similarity between our database and your question...\nWe are searching the web for your answer!"})
-                chat_history.append({'user': False, 'message': f"{llm_response['answer']}"})
-                chat_history.append({'user': False, 'message': f"Sources:\n\n  {llm_response['sources']}"})
+                chat_history.append({'user': False, 'message': f"{llm_response['answer']} \nSources:\n\n  {llm_response['sources']}"})
             else:
                 print(f"\n\n\n {llm_response}")
                 print(f"\n\nLLM Response:\n\n{llm_response}\n")
                 print(f"Source: \n\n{vector_content}______________________\n\n")
-                chat_history.append({'user': False, 'message': f"{llm_response}"})
-                chat_history.append({'user': False, 'message': f"Sources:\n\n  {vector_content}"})
+                chat_history.append({'user': False, 'message': f"{llm_response} \n\n Source: {vector_content}"})
+                
         return chat_history
 
 
