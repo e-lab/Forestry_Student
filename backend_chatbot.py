@@ -136,7 +136,7 @@ class ChatBot:
                 print(f"\n\n\n {llm_response}")
                 print(f"\n\nLLM Response:\n\n{llm_response}\n")
                 print(f"Source: \n\n{vector_content}______________________\n\n")
-                chat_history.append({'user': False, 'message': f"{llm_response} \n\n Cotent: {vector_content}\n\nSource: {file_name}"})
+                chat_history.append({'user': False, 'message': f"{llm_response}\n\n Cotent:\n{vector_content}\n\nFile Name:\n{file_name}"})
                 
         return chat_history
 
