@@ -6,9 +6,15 @@
      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
      <!-- MAIN CSS -->
-     <link rel="stylesheet" href="css/style.css">
+     <link rel="stylesheet" href="static/css/style.css">
 
      <style>
+        .body {
+            background: linear-gradient(to bottom, gold, black);
+            margin: 0; /* Remove default body margin */
+            padding: 0; /* Remove default body padding */
+        }
+
         .carousel-caption {
             color: black;
         }
@@ -69,8 +75,9 @@
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-7 col-xl-7">
-                    <ul class="list-unstyled text-white">
-                        <ul class="list-unstyled text-white">
+                    <div class="chat-history-container">
+                        <ul class="chat-history list-unstyled text-white">
+                            <!-- Chat history loop -->
                             {% for message in chat_history %}
                                 {% if message.user %}
                                     <!-- User message on the right -->
@@ -102,9 +109,10 @@
                                     </li>
                                 {% endif %}
                             {% endfor %}
-
                         </ul>
-                        <li class="mb-3">
+                    </div>
+                    <div class="input-form-container">
+                        <div class="input-form">
                             <form method="POST" action="{{ url_for('process_input') }}">
                                 <div class="form-outline form-white">
                                     <textarea class="form-control" name="user_input" id="textAreaExample3" rows="4"></textarea>
@@ -112,14 +120,11 @@
                                 </div>
                                 <button type="submit" class="btn btn-light btn-lg btn-rounded float-end">Send</button>
                             </form>
-                        </li>
-                    </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 </body>
-
-
-
 </html>
