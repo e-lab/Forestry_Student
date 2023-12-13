@@ -1,6 +1,8 @@
 from torch import cuda, bfloat16
 import transformers
 
+print("Loading Llama2...")
+
 model_id = 'meta-llama/Llama-2-7b-chat-hf'
 
 device = f'cuda:{cuda.current_device()}' if cuda.is_available() else 'cpu'
