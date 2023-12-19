@@ -4,7 +4,8 @@ from flask import request
 import os
 import fitz  # PyMuPDF
 
-import backend_chatbot as BCB
+#import backend_chatbot as BCB
+import pandas_functions as BCB 
 
 current_directory = os.path.dirname(os.path.abspath(__file__))
 
@@ -104,10 +105,12 @@ def read_pdf(file_path):
 def process_input():
     print("Chat Box")
     user_input = request.form.get('user_input')
+    print(user_input)
     global chat_history
     # Add user input to the chat history
     chat_history.append({'user': True, 'message': user_input})
-    chat_history = chatbot.process_question(user_input, database_name, chat_history)
+    csv_path = "/Users/viktorciroski/Documents/Github/Forestry_Student/indiana_trees_remeasured.csv"
+    chat_history = chatbot.process_question(user_input, csv_path, chat_history)#, database_name, chat_history)
 
     return render_template('index.html', chat_history=chat_history)
 
