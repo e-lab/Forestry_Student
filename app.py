@@ -1,8 +1,12 @@
 from flask import Flask, render_template, request, jsonify
+from langchain.memory import ChatMessageHistory
 import os
 from flask import request
 import os
 import fitz  # PyMuPDF
+
+import textwrap
+
 
 #import backend_chatbot as BCB
 import pandas_functions as BCB 
@@ -14,7 +18,10 @@ app = Flask(__name__, template_folder='templates')
 app.secret_key = 'your_secret_key'
 app = Flask(__name__)
 global chat_history
-chat_history = [{'user': False, 'message': f"Hello my name is FIRST (Forest Intellect Research & \nTechnology System), how can i help you today?"}]
+history = ChatMessageHistory()
+message = f"Hello my name is FIRST (Forest Intellect Research & \nTechnology System), how can i help you today?"
+history.add_ai_message(message)
+chat_history = [{'user': False, 'message': message}]
 chatbot = BCB.ChatBot()
 database_name='courses.db'
 
@@ -101,6 +108,12 @@ def read_pdf(file_path):
     return pdf_text
 
 
+
+
+def format_string(input_string, n):
+        formatted_string = textwrap.wrap(input_string, width=n)
+        return '\n'.join(formatted_string)
+
 @app.route('/process_input', methods=['POST'])
 def process_input():
     print("Chat Box")
@@ -109,8 +122,17 @@ def process_input():
     global chat_history
     # Add user input to the chat history
     chat_history.append({'user': True, 'message': user_input})
+    history.add_user_message(user_input)
     csv_path = "/Users/viktorciroski/Documents/Github/Forestry_Student/indiana_trees_remeasured.csv"
-    chat_history = chatbot.process_question(user_input, csv_path, chat_history)#, database_name, chat_history)
+    response = chatbot.agent({"input": f"{user_input}", "chat_history":chat_history})
+    output = format_string(response['output'], n=60)
+    print(output)
+    chat_history.append({'user': False, 'message': output})
+    history.add_ai_message(output)
+    print("\n\n\n\n\n\n\n")
+    print(history.messages)
+    print("\n\n\n\n\n\n\n")
+    #chat_history.append({'user': False, 'message': history.messages[0]})
 
     return render_template('index.html', chat_history=chat_history)
 
