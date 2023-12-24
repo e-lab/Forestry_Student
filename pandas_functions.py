@@ -12,7 +12,9 @@ from langchain.utilities import GoogleSearchAPIWrapper
 from sklearn.metrics.pairwise import cosine_similarity
 from langchain_experimental.agents.agent_toolkits import create_pandas_dataframe_agent
 from langchain.tools import BaseTool, StructuredTool, Tool, tool
-from langchain.agents import AgentType, initialize_agent
+from langchain.agents import AgentType, initialize_agent, load_tools
+from langchain.chains import LLMMathChain
+from langchain.utilities import ArxivAPIWrapper
 
 import faiss
 import openai
@@ -29,6 +31,12 @@ from utils import get_most_similar_embbeding_for_question, get_embedding, insert
 
 from langchain.llms import Ollama
 from langchain.chat_models import ChatOllama
+from pydantic import BaseModel, Field
+
+
+class CalculatorInput(BaseModel):
+    question: str = Field()
+
 
 class ChatBot:
     def __init__(self, embedding_size=1536,temperature=0.0001, max_iterations=3):
@@ -77,9 +85,14 @@ class ChatBot:
             search=self.search, 
             num_search_results=3
         )
+
+
         self.web_QA = RetrievalQAWithSourcesChain.from_chain_type(self.llm, retriever=self.web_retriever)
+        llm_math_chain = LLMMathChain.from_llm(llm=self.llm, verbose=True)
+        arxiv = ArxivAPIWrapper()
         
         #Define Tools 
+        
         self.tools = [ Tool(
             name="in_context_qa",
             func=self.in_context_qa,
@@ -89,8 +102,23 @@ class ChatBot:
                 func=self.web_QA,
                 name="web_QA",
                 description="web_QA is a web searching tool for the LLM agent, triggered when the similarity score from in-context QA is too low. It dynamically integrates the LLM and a web retriever to broaden knowledge through targeted web searches, enhancing the agent's responsiveness and adaptability to diverse user queries",
+            ),
+            Tool.from_function(
+                func=llm_math_chain.run,
+                name="Calculator",
+                description="useful for when you need to answer questions about math",
+                args_schema=CalculatorInput,
+                # coroutine= ... <- you can specify an async method if desired as well
+            ),
+            Tool.from_function(
+                func=arxiv.run,
+                name="arxiv",
+                description="useful for when you need to answer research based questions or find scientific documents or papers",
+                args_schema=CalculatorInput,
+                # coroutine= ... <- you can specify an async method if desired as well
             )
         ]
+        
         self.agent = initialize_agent(self.tools, self.llm, agent="conversational-react-description", verbose=True, handle_parsing_errors=True, max_iterations=max_iterations)
         print(f"Agent Prompt \n\t{self.agent.agent.llm_chain.prompt.template}\n\n")
 
