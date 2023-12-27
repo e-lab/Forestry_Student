@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-     <title>Landing Page No Login</title>
-     <!-- Bootstrap CSS -->
-     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <title>Landing Page No Login</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
-     <!-- MAIN CSS -->
-     <link rel="stylesheet" href="static/css/style.css">
+    <!-- MAIN CSS -->
+    <link rel="stylesheet" href="static/css/style.css">
 
-     <style>
+    <style>
         .body {
             background: linear-gradient(to bottom, gold, black);
             margin: 0; /* Remove default body margin */
@@ -43,33 +43,29 @@
                                             <span class="badge bg-danger float-end">1</span>
                                         </div>
                                     </a>
-                                    <form id="uploadForm" method="POST" action="{{ url_for('upload_material') }}" enctype="multipart/form-data">
+                                    <form id="uploadMaterialForm" method="POST" action="{{ url_for('upload_material') }}" enctype="multipart/form-data">
                                         <label for="className" class="text-white" style="color: black;">Class Name:</label>
                                         <input type="text" name="className" id="className" required>
                                         <br>
                                         <label for="topics" class="text-white" style="color: black;">Topics:</label>
                                         <input type="text" name="topics" id="topics" required>
                                         <br>
-                                        <label for="fileInput" class="text-white" style="color: black;">Upload Class Material:</label>
-                                        <input type="file" name="fileInput" id="fileInput" accept=".pdf, .txt" onchange="displayFileName()" required>
+                                        <label for="fileInputMaterial" class="text-white" style="color: black;">Upload Class Material:</label>
+                                        <input type="file" name="fileInputMaterial" id="fileInputMaterial" accept=".pdf, .txt" onchange="displayFileName('fileInputMaterial')" required>
                                         <br>
-                                        <button type="button" class="btn btn-light btn-sm mt-2" onclick="document.getElementById('uploadForm').submit();">Let model read the document</button>
-                                        <span id="fileNameDisplay"></span>
+                                        <button type="button" class="btn btn-light btn-sm mt-2" onclick="document.getElementById('uploadMaterialForm').submit();">Let model read the document</button>
+                                        <span id="fileNameDisplayMaterial"></span>
                                     </form>
                                     
                                     <!-- Add JavaScript to display the selected file name -->
                                     <script>
-                                        function displayFileName() {
-                                            const fileInput = document.getElementById('fileInput');
-                                            const fileNameDisplay = document.getElementById('fileNameDisplay');
+                                        function displayFileName(inputId) {
+                                            const fileInput = document.getElementById(inputId);
+                                            const fileNameDisplay = document.getElementById('fileNameDisplay' + inputId.charAt(0).toUpperCase() + inputId.slice(1));
                                             fileNameDisplay.innerText = fileInput.files[0].name;
                                         }
                                     </script>
-                                    
                                 </li>
-                                
-                                
-                                
                             </ul>
                         </div>
                     </div>
@@ -111,14 +107,24 @@
                             {% endfor %}
                         </ul>
                     </div>
+
                     <div class="input-form-container">
                         <div class="input-form">
-                            <form method="POST" action="{{ url_for('process_input') }}">
+                            <form method="POST" action="{{ url_for('process_input') }}" id="uploadForm" enctype="multipart/form-data">
                                 <div class="form-outline form-white">
                                     <textarea class="form-control" name="user_input" id="textAreaExample3" rows="4"></textarea>
                                     <label class="form-label" for="textAreaExample3">Message</label>
                                 </div>
-                                <button type="submit" class="btn btn-light btn-lg btn-rounded float-end">Send</button>
+                                <div class="row mt-2">
+                                    <div class="col-md-6">
+                                        <button type="submit" class="btn btn-light btn-lg btn-rounded">Send</button>
+                                    </div>
+                                    <div class="col-md-6 text-end">
+                                        <input type="file" name="fileInputMessage" id="fileInputMessage" accept=".pdf, .txt, .csv" onchange="displayFileName_msg('fileInputMessage')">
+                                        <br>
+                                        <span id="fileNameDisplayMessage"></span>
+                                    </div>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -126,5 +132,17 @@
             </div>
         </div>
     </section>
+
+    <script>
+        function displayFileName_msg(inputId) {
+            var input = document.getElementById(inputId);
+            var fileNameDisplay = document.getElementById("fileNameDisplayMessage");
+
+            if (input.files.length > 0) {
+                // Display the file name
+                fileNameDisplay.textContent = "File Name: " + input.files[0].name;
+            } 
+        }
+    </script>
 </body>
 </html>

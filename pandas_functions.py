@@ -15,6 +15,7 @@ from langchain.tools import BaseTool, StructuredTool, Tool, tool
 from langchain.agents import AgentType, initialize_agent, load_tools
 from langchain.chains import LLMMathChain
 from langchain.utilities import ArxivAPIWrapper
+from langchain_experimental.agents.agent_toolkits import create_pandas_dataframe_agent
 
 import faiss
 import openai
@@ -36,6 +37,11 @@ from pydantic import BaseModel, Field
 
 class CalculatorInput(BaseModel):
     question: str = Field()
+
+class DataframeInput(BaseModel):
+    query: str
+    csv_path: str
+    chat_history: list = [] 
 
 
 class ChatBot:
@@ -116,11 +122,25 @@ class ChatBot:
                 description="useful for when you need to answer research based questions or find scientific documents or papers",
                 args_schema=CalculatorInput,
                 # coroutine= ... <- you can specify an async method if desired as well
+            ),
+            
+            Tool.from_function(
+                func=self.parsing_dataframe_question,
+                name="parsing_dataframe_question",
+                description="""This notebook shows how to use agents to interact with a Pandas DataFrame. It is mostly optimized for question answering.
+                            The input to this tool should be a comma separated list of strings of length two, representing the two inputs first the user question and second the csv file path""",
+                
+                # coroutine= ... <- you can specify an async method if desired as well
             )
         ]
         
-        self.agent = initialize_agent(self.tools, self.llm, agent="conversational-react-description", verbose=True, handle_parsing_errors=True, max_iterations=max_iterations)
-        print(f"Agent Prompt \n\t{self.agent.agent.llm_chain.prompt.template}\n\n")
+        self.agent = initialize_agent(self.tools, 
+                                        self.llm, 
+                                        agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
+                                        verbose=True, 
+                                        handle_parsing_errors=True, 
+                                        max_iterations=max_iterations)
+        #print(f"Agent Prompt \n\t{self.agent.agent.llm_chain.prompt.template}\n\n")
 
 
 
@@ -199,20 +219,23 @@ class ChatBot:
 
         return message, chat_history
 
-    def process_question(self, query, csv_path, chat_history=[]):
+    def parsing_dataframe_question(self, string):
+        print("parsing_dataframe_question TEST")
+        print(string)
+        if type(string) is not str:
+            string = ', '.join(string)
+        query, csv_path = string.split(",")
+        
+        return self.process_dataframe_question(str(query), str(csv_path))
+    
+    def process_dataframe_question(self, query, csv_path, chat_history=[]):
         df = pd.read_csv(csv_path)
         df.attrs['filename']=csv_path
-        print(df.attrs['filename'])
+        #print(df.attrs['filename'])
         agent = create_pandas_dataframe_agent(self.llm, df, verbose=True, agent="chat-zero-shot-react-description")
         response = agent.run(f"{query}")
-        response = self.format_string(response, n=60)
-        #print("_____")
-        print(response)
-
-
-
-        chat_history.append({'user': False, 'message': f"{response}"})
-        return chat_history
+        #print(response)
+        return response
 
 
 # Example usage
