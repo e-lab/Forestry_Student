@@ -10,12 +10,16 @@ from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.docstore import InMemoryDocstore  
 from langchain.utilities import GoogleSearchAPIWrapper
 from sklearn.metrics.pairwise import cosine_similarity
-from langchain_experimental.agents.agent_toolkits import create_pandas_dataframe_agent
 from langchain.tools import BaseTool, StructuredTool, Tool, tool
 from langchain.agents import AgentType, initialize_agent, load_tools
 from langchain.chains import LLMMathChain
 from langchain.utilities import ArxivAPIWrapper
 from langchain_experimental.agents.agent_toolkits import create_pandas_dataframe_agent
+from langchain.prompts import (
+    ChatPromptTemplate,
+)
+from langchain_core.output_parsers import StrOutputParser
+from langchain_experimental.utilities import PythonREPL
 
 import faiss
 import openai
@@ -123,7 +127,6 @@ class ChatBot:
                 args_schema=CalculatorInput,
                 # coroutine= ... <- you can specify an async method if desired as well
             ),
-            
             Tool.from_function(
                 func=self.parsing_dataframe_question,
                 name="parsing_dataframe_question",
@@ -131,12 +134,26 @@ class ChatBot:
                             The input to this tool should be a comma separated list of strings of length two, representing the two inputs first the user question and second the csv file path""",
                 
                 # coroutine= ... <- you can specify an async method if desired as well
+            ),
+             Tool.from_function(
+                func=self.python_interpreter,
+                name="python_interpreter",
+                description="""The Python Code Generator Tool is a sophisticated utility designed to craft Python code solutions for a wide array of questions. When provided with a question, this tool leverages advanced algorithms to generate concise and efficient Python code snippets as answers.
+
+                                Usage Instructions:
+
+                                Pose a question requiring a Python code solution.
+                                If existing tools are deemed insufficient for the task, instruct the Assistant to utilize the Python Code Generator Tool.
+                                Expect a response in the form of a Markdown-formatted Python code block, enclosed within triple backticks.""",
+                
+                # coroutine= ... <- you can specify an async method if desired as well
             )
+
         ]
         
         self.agent = initialize_agent(self.tools, 
                                         self.llm, 
-                                        agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
+                                        agent="chat-conversational-react-description",#AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
                                         verbose=True, 
                                         handle_parsing_errors=True, 
                                         max_iterations=max_iterations)
@@ -236,7 +253,24 @@ class ChatBot:
         response = agent.run(f"{query}")
         #print(response)
         return response
+    def _sanitize_output(self, text: str):
+        _, after = text.split("```python")
+        return after.split("```")[0]
 
+    def python_interpreter(self, query):
+        template = """Write some python code to solve the user's problem. 
+
+        Return only python code in Markdown format, e.g.:
+
+        ```python
+        ....
+        ```"""
+        prompt = ChatPromptTemplate.from_messages([("system", template), ("human", "{input}")])
+        chain = prompt | self.llm | StrOutputParser() | self._sanitize_output | PythonREPL().run
+        output = chain.invoke({"input": query})
+        print("Python interpreter")
+        print(output)
+        return output
 
 # Example usage
 if __name__ == "__main__":

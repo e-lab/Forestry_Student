@@ -139,7 +139,7 @@ def process_input():
         if file_path_new.startswith("_1"):
             pass 
         else:
-            """STILL NEED WAY TO KEEP WORKING FILE STATIC TILL USER CHANGES BUT NOT NEEDED NOW"""
+            """STILL NEED WAY TO KEEP WORKING FILE STATIC TILL USER CHANGES BUT NOT NEEDED"""
             #print(file_path_new)x
             if file_path_new == file_path_msg:
                 pass 
@@ -148,21 +148,22 @@ def process_input():
     print(file_path_msg)
     global chat_history
     # Add user input to the chat history
+    print(user_input)
     chat_history.append({'user': True, 'message': user_input})
+    print("Added to chat history")
     history.add_user_message(user_input)
     #csv_path = "/Users/viktorciroski/Documents/Github/Forestry_Student/indiana_trees_remeasured.csv"
-    try:
-        response = chatbot.agent({"input": f"{user_input} {file_path_msg}", "chat_history":chat_history})
-        output = format_string(response['output'], n=60)
-        print(output)
-        chat_history.append({'user': False, 'message': output})
-        history.add_ai_message(output)
-        print("\n\n\n\n\n\n\n")
-        print(history.messages)
-        print("\n\n\n\n\n\n\n")
-        #chat_history.append({'user': False, 'message': history.messages[0]})
-    except:
-        chat_history.append({'user': False, 'message': "something went wrong can you repharse the question"})
+  
+    response = chatbot.agent({"input": f"{user_input} {file_path_msg}", "chat_history":[]})#chat_history})#Error with chat history formatting... hasn't been a problem till 12/27 2:30pm. Not sure what's happened
+    output = format_string(response['output'], n=60)
+    print(output)
+    chat_history.append({'user': False, 'message': output})
+    history.add_ai_message(output)
+    print("\n\n\n\n\n\n\n")
+    print(history.messages)
+    print("\n\n\n\n\n\n\n")
+    #chat_history.append({'user': False, 'message': history.messages[0]})
+    
 
     return render_template('index.html', chat_history=chat_history)
 
