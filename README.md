@@ -10,7 +10,7 @@
 Add overview of model what it is, what we want it to do, how it's trained, and how it's tested 
 <br>
 <br>
-![FIRST System Overview](md_imgs/Screenshot 2024-01-14 at 1.13.34 PM.png)
+![FIRST System Overview](/md_imgs/Screenshot 2024-01-14 at 1.13.34 PM.png)
 
 <br>
 <br>
