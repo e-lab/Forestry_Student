@@ -34,25 +34,27 @@ def get_most_similar_embbeding_for_question(cursor, question):
     """
 
     # Assuming you have a database connection object named 'cursor'
-    cursor.execute("SELECT content, embedding FROM documents")
+    cursor.execute("SELECT content, embedding, file_name FROM documents")
     result = cursor.fetchall()
 
     q_embbed = get_embedding(question)
     start_time = time.time()
 
-    result_dict = {"Content": [], 'Embeddings': [], 'Similarity Score': []}
+    result_dict = {"Content": [], 'Embeddings': [], 'file_name': [], 'Similarity Score': []}
 
     #print("SIMILARITY SCORE")
     if result:
         for index in range(len(result)):
             content = result[index][0]
             r = result[index][1]
+            f = result[index][2]
         
             r = json.loads(r)
             similarity_score = cosine_similarity(np.array(q_embbed).reshape(1, -1), np.array(r).reshape(1, -1))
             result_dict['Embeddings'].append([r])
             result_dict['Similarity Score'].append(similarity_score[0][0])
             result_dict['Content'].append(content)
+            result_dict['file_name'].append(f)
  
         result_df = pd.DataFrame(result_dict)
         max_similarity_row = result_df.loc[result_df['Similarity Score'].idxmax()]
@@ -60,7 +62,7 @@ def get_most_similar_embbeding_for_question(cursor, question):
         end_time = time.time()
         runtime = end_time - start_time
         #print("Runtime:", runtime, "seconds")
-
+        print(max_similarity_row)
         return max_similarity_row
             
 

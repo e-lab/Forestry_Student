@@ -1,14 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-     <title>Landing Page No Login</title>
-     <!-- Bootstrap CSS -->
-     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <title>Landing Page No Login</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
-     <!-- MAIN CSS -->
-     <link rel="stylesheet" href="css/style.css">
+    <!-- MAIN CSS -->
+    <link rel="stylesheet" href="static/css/style.css">
 
-     <style>
+    <style>
+        .body {
+            background: linear-gradient(to bottom, gold, black);
+            margin: 0; /* Remove default body margin */
+            padding: 0; /* Remove default body padding */
+        }
+
         .carousel-caption {
             color: black;
         }
@@ -28,7 +34,7 @@
                                         <div class="d-flex flex-row">
                                             <img src="static/images/TreeHugger.webp" alt="avatar" class="rounded-circle d-flex align-self-center me-3 shadow-1-strong" width="60">
                                             <div class="pt-1">
-                                                <p class="fw-bold mb-0">TreeHugger</p>
+                                                <p class="fw-bold mb-0">Forest Intellect Research & Technology System (FIRST)</p>
                                                 <p class="small text-white">Hello, Are you there?</p>
                                             </div>
                                         </div>
@@ -37,40 +43,37 @@
                                             <span class="badge bg-danger float-end">1</span>
                                         </div>
                                     </a>
-                                    <form id="uploadForm" method="POST" action="{{ url_for('upload_material') }}" enctype="multipart/form-data">
+                                    <form id="uploadMaterialForm" method="POST" action="{{ url_for('upload_material') }}" enctype="multipart/form-data">
                                         <label for="className" class="text-white" style="color: black;">Class Name:</label>
                                         <input type="text" name="className" id="className" required>
                                         <br>
                                         <label for="topics" class="text-white" style="color: black;">Topics:</label>
                                         <input type="text" name="topics" id="topics" required>
                                         <br>
-                                        <label for="fileInput" class="text-white" style="color: black;">Upload Class Material:</label>
-                                        <input type="file" name="fileInput" id="fileInput" accept=".pdf, .txt" onchange="displayFileName()" required>
+                                        <label for="fileInputMaterial" class="text-white" style="color: black;">Upload Class Material:</label>
+                                        <input type="file" name="fileInputMaterial" id="fileInputMaterial" accept=".pdf, .txt" onchange="displayFileName('fileInputMaterial')" required>
                                         <br>
-                                        <button type="button" class="btn btn-light btn-sm mt-2" onclick="document.getElementById('uploadForm').submit();">Let model read the document</button>
-                                        <span id="fileNameDisplay"></span>
+                                        <button type="button" class="btn btn-light btn-sm mt-2" onclick="document.getElementById('uploadMaterialForm').submit();">Let model read the document</button>
+                                        <span id="fileNameDisplayMaterial"></span>
                                     </form>
                                     
                                     <!-- Add JavaScript to display the selected file name -->
                                     <script>
-                                        function displayFileName() {
-                                            const fileInput = document.getElementById('fileInput');
-                                            const fileNameDisplay = document.getElementById('fileNameDisplay');
+                                        function displayFileName(inputId) {
+                                            const fileInput = document.getElementById(inputId);
+                                            const fileNameDisplay = document.getElementById('fileNameDisplay' + inputId.charAt(0).toUpperCase() + inputId.slice(1));
                                             fileNameDisplay.innerText = fileInput.files[0].name;
                                         }
                                     </script>
-                                    
                                 </li>
-                                
-                                
-                                
                             </ul>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-7 col-xl-7">
-                    <ul class="list-unstyled text-white">
-                        <ul class="list-unstyled text-white">
+                    <div class="chat-history-container">
+                        <ul class="chat-history list-unstyled text-white">
+                            <!-- Chat history loop -->
                             {% for message in chat_history %}
                                 {% if message.user %}
                                     <!-- User message on the right -->
@@ -81,7 +84,7 @@
                                                 <p class="text-light small mb-0"><i class="far fa-clock"></i> {{ message.timestamp }}</p>
                                             </div>
                                             <div class="card-body" style="color: black;">
-                                                <p class="mb-0">{{ message.message }}</p>
+                                                <pre class="mb-0">{{ message.message }}</pre>
                                             </div>
                                         </div>
                                         <img src="static/images/TreeHugger.webp" alt="avatar" class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong" width="60">
@@ -92,34 +95,54 @@
                                         <img src="static/images/TreeHugger.webp" alt="avatar" class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
                                         <div class="card mask-custom">
                                             <div class="card-header d-flex justify-content-between p-3" style="border-bottom: 1px solid rgba(255,255,255,.3);">
-                                                <p class="fw-bold mb-0" style="color: black;">TreeHugger</p>
+                                                <p class="fw-bold mb-0" style="color: black;">FIRST</p>
                                                 <p class="text-light small mb-0"><i class="far fa-clock"></i> {{ message.timestamp }}</p>
                                             </div>
                                             <div class="card-body" style="color: black;">
-                                                <p class="mb-0">{{ message.message }}</p>
+                                                <pre class="mb-0">{{ message.message }}</pre>
                                             </div>
                                         </div>
                                     </li>
                                 {% endif %}
                             {% endfor %}
-
                         </ul>
-                        <li class="mb-3">
-                            <form method="POST" action="{{ url_for('process_input') }}">
+                    </div>
+
+                    <div class="input-form-container">
+                        <div class="input-form">
+                            <form method="POST" action="{{ url_for('process_input') }}" id="uploadForm" enctype="multipart/form-data">
                                 <div class="form-outline form-white">
                                     <textarea class="form-control" name="user_input" id="textAreaExample3" rows="4"></textarea>
                                     <label class="form-label" for="textAreaExample3">Message</label>
                                 </div>
-                                <button type="submit" class="btn btn-light btn-lg btn-rounded float-end">Send</button>
+                                <div class="row mt-2">
+                                    <div class="col-md-6">
+                                        <button type="submit" class="btn btn-light btn-lg btn-rounded">Send</button>
+                                    </div>
+                                    <div class="col-md-6 text-end">
+                                        <input type="file" name="fileInputMessage" id="fileInputMessage" accept=".pdf, .txt, .csv" onchange="displayFileName_msg('fileInputMessage')">
+                                        <br>
+                                        <span id="fileNameDisplayMessage"></span>
+                                    </div>
+                                </div>
                             </form>
-                        </li>
-                    </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <script>
+        function displayFileName_msg(inputId) {
+            var input = document.getElementById(inputId);
+            var fileNameDisplay = document.getElementById("fileNameDisplayMessage");
+
+            if (input.files.length > 0) {
+                // Display the file name
+                fileNameDisplay.textContent = "File Name: " + input.files[0].name;
+            } 
+        }
+    </script>
 </body>
-
-
-
 </html>

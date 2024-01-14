@@ -1,19 +1,77 @@
+/* Reset default body margin and padding */
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Hide scrollbars */
+}
+
+/* Set the background to a radial gradient */
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Hide scrollbars */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.743),  gold);
+    z-index: -1;
+}
+
+
+
 .gradient-custom {
     /* fallback for old browsers */
-    background: #fccb90;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.743),  gold);
     
     /* Chrome 10-25, Safari 5.1-6 */
-    background: -webkit-linear-gradient(to bottom right, rgba(252, 203, 144, 1), rgba(213, 126, 235, 1));
+    background: -webkit-linear-gradient(to bottom right, rgba(0, 0, 0, 0.743),  gold);
     
     /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    background: linear-gradient(to bottom right, rgba(252, 203, 144, 1), rgba(213, 126, 235, 1))
-    }
-    
-    .mask-custom {
+    background: linear-gradient(to bottom right, rgba(0, 0, 0, 0.743),  gold);
+}
+
+.mask-custom {
     background: rgba(24, 24, 16, .2);
     border-radius: 2em;
     backdrop-filter: blur(15px);
     border: 2px solid rgba(255, 255, 255, 0.05);
     background-clip: padding-box;
     box-shadow: 10px 10px 10px rgba(46, 54, 68, 0.03);
-    }
+}
+
+.chat-history-container {
+    height: calc(100vh - 60px); /* Adjust the height based on your design */
+    overflow-y: auto;
+}
+
+.input-form {
+    width: calc(100vh - 60px); /* Adjust the width based on your design */
+    margin-left: 600px;
+}
+
+.input-form-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px;
+}
+
+.chat-history {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    padding-top: 60px; /* Height of the input form */
+    padding-bottom: 600px;
+}
+
+.chat-history li {
+    margin-bottom: 16px;
+}
+
+.card.mask-custom {
+    /* Your existing styles for the mask-custom class */
+}
+

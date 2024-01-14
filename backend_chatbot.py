@@ -110,37 +110,29 @@ class ChatBot:
         self.load_database(database_name)
         # Process the user's question and get the most similar embedding from the database
         #print(query)
-        vector_content, _, similarity_score = np.array(get_most_similar_embbeding_for_question(self.cursor,query))
+        vector_content, _, file_name, similarity_score = np.array(get_most_similar_embbeding_for_question(self.cursor,query))
         #print(similarity_score)
         # Check similarity threshold and respond accordingly
-        if similarity_score < 0.6:
+        if similarity_score < 0.7:
             # If similarity is low, search the web for the answer
             print("\n\nWe appear to lack a strong enough similarity between our database and your question...\nWe are searching the web for your answer!")
             llm_response = self.qa_chain({"question": query})
-            print(f"\n\nLLM Response:\n\n{llm_response['answer']}\n")
-            print(f"Sources:\n\n  {llm_response['sources']}\n______________________\n\n")
+            print(f"\n\nLLM Response:\n\n{llm_response['answer']}\n{llm_response['sources']}")
 
             chat_history.append({'user': False, 'message': "We appear to lack a strong enough similarity between our database and your question...\nWe are searching the web for your answer!"})
-            chat_history.append({'user': False, 'message': f"{llm_response['answer']}"})
-            chat_history.append({'user': False, 'message': f"Sources:\n\n  {llm_response['sources']}"})
+            chat_history.append({'user': False, 'message': f"{llm_response['answer']}\nSources:\n\n  {llm_response['sources']}"})
             #return chat_history
         else:
             # If similarity is high, use the local database
             llm_response = self.llm.predict(f"{vector_content} {query}")
-            if cosine_similarity(np.array(get_embedding(llm_response) ).reshape(1, -1), np.array(self.backup_check).reshape(1, -1)) >0.8:
-                print("\n\nWe appear to lack a strong enough similarity between our database and your question...\nWe are searching the web for your answer!")
-                llm_response = self.qa_chain({"question": query})
-                print(f"\n\nLLM Response:\n\n{llm_response['answer']}\n")
-                print(f"Sources:\n\n  {llm_response['sources']}\n______________________\n\n")
-                chat_history.append({'user': False, 'message': "We appear to lack a strong enough similarity between our database and your question...\nWe are searching the web for your answer!"})
-                chat_history.append({'user': False, 'message': f"{llm_response['answer']}"})
-                chat_history.append({'user': False, 'message': f"Sources:\n\n  {llm_response['sources']}"})
-            else:
-                print(f"\n\n\n {llm_response}")
-                print(f"\n\nLLM Response:\n\n{llm_response}\n")
-                print(f"Source: \n\n{vector_content}______________________\n\n")
-                chat_history.append({'user': False, 'message': f"{llm_response}"})
-                chat_history.append({'user': False, 'message': f"Sources:\n\n  {vector_content}"})
+            
+            """NEED BETTER WAY TO AVOID OUTPUTTING CONTENT IF LLM DOSEN"T NEED IT"""
+            vector_content = vector_content.replace("\n", "").replace("\t", "")
+            print(f"\n\n\n {llm_response}")
+            print(f"\n\nLLM Response:\n\n{llm_response}\n")
+            print(f"Source: \n\n{vector_content}______________________\n\n")
+            chat_history.append({'user': False, 'message': f"{llm_response}\n\n Cotent:\n{vector_content}\n\nFile Name:\n{file_name}"})
+
         return chat_history
 
 

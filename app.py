@@ -1,10 +1,15 @@
 from flask import Flask, render_template, request, jsonify
+from langchain.memory import ChatMessageHistory
 import os
 from flask import request
 import os
 import fitz  # PyMuPDF
 
-import backend_chatbot as BCB
+import textwrap
+
+
+#import backend_chatbot as BCB
+import pandas_functions as BCB 
 
 current_directory = os.path.dirname(os.path.abspath(__file__))
 
@@ -12,7 +17,13 @@ app = Flask(__name__, static_url_path='/static')
 app = Flask(__name__, template_folder='templates')
 app.secret_key = 'your_secret_key'
 app = Flask(__name__)
-chat_history = []
+global chat_history
+global file_path_msg
+file_path_msg = None
+history = ChatMessageHistory()
+message = f"Hello my name is FIRST (Forest Intellect Research & \nTechnology System), how can i help you today?"
+history.add_ai_message(message)
+chat_history = [{'user': False, 'message': message}]
 chatbot = BCB.ChatBot()
 database_name='courses.db'
 
@@ -20,9 +31,26 @@ database_name='courses.db'
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', chat_history=chat_history)
 
+def save_file(file):
+    # Process the file as needed (save to disk, etc.)
+    # For example, save the file to the 'uploads' folder
+    uploads_folder = 'uploads'
+    if not os.path.exists(uploads_folder):
+        os.makedirs(uploads_folder)
 
+    # Ensure the file name is unique to avoid overwriting directories
+    file_name = file.filename
+    while os.path.exists(os.path.join(uploads_folder, file_name)):
+        # If a file with the same name exists, append a number to make it unique
+        name, extension = os.path.splitext(file_name)
+        file_name = f"{name}_1{extension}"
+
+    # Save the file to the 'uploads' folder
+    file_path = os.path.join(uploads_folder, file_name)
+    file.save(file_path)
+    return file_path
 
 @app.route('/upload_material', methods=['POST'])
 def upload_material():
@@ -46,15 +74,7 @@ def upload_material():
     class_name = request.form.get('className').lower()
     topic_name = request.form.get('topics').lower()
 
-    # Process the file as needed (save to disk, etc.)
-    # For example, save the file to the 'uploads' folder
-    uploads_folder = 'uploads'
-    if not os.path.exists(uploads_folder):
-        os.makedirs(uploads_folder)
-
-    # Save the file to the 'uploads' folder
-    file_path = os.path.join(uploads_folder, file.filename)
-    file.save(file_path)
+    file_path  = save_file(file)
 
     # Read the content based on file type
     if file.filename.endswith('.txt'):
@@ -99,15 +119,51 @@ def read_pdf(file_path):
     return pdf_text
 
 
+
+
+def format_string(input_string, n):
+        formatted_string = textwrap.wrap(input_string, width=n)
+        return '\n'.join(formatted_string)
+
 @app.route('/process_input', methods=['POST'])
 def process_input():
+    global file_path_msg
     print("Chat Box")
-    global chat_history
     user_input = request.form.get('user_input')
-    
+    print(user_input)
+    file = request.files['fileInputMessage'] if 'fileInputMessage' in request.files else None
+    print(file)
+    if file is not None:
+        #print(f"file name: {file}")
+        file_path_new  = save_file(file)
+        if file_path_new.startswith("_1"):
+            pass 
+        else:
+            """STILL NEED WAY TO KEEP WORKING FILE STATIC TILL USER CHANGES BUT NOT NEEDED"""
+            #print(file_path_new)x
+            if file_path_new == file_path_msg:
+                pass 
+            else:
+                file_path_msg = file_path_new
+    print(file_path_msg)
+    global chat_history
     # Add user input to the chat history
+    print(user_input)
     chat_history.append({'user': True, 'message': user_input})
-    chat_history = chatbot.process_question(user_input, database_name, chat_history)
+    print("Added to chat history")
+    history.add_user_message(user_input)
+    #csv_path = "/Users/viktorciroski/Documents/Github/Forestry_Student/indiana_trees_remeasured.csv"
+  
+    response = chatbot.agent({"input": f"{user_input} {file_path_msg}", "chat_history":[]})#chat_history})#Error with chat history formatting... hasn't been a problem till 12/27 2:30pm. Not sure what's happened
+    output = format_string(response['output'], n=60)
+    print(output)
+    chat_history.append({'user': False, 'message': output})
+    history.add_ai_message(output)
+    print("\n\n\n\n\n\n\n")
+    print(history.messages)
+    print("\n\n\n\n\n\n\n")
+    #chat_history.append({'user': False, 'message': history.messages[0]})
+    
 
     return render_template('index.html', chat_history=chat_history)
 
