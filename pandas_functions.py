@@ -93,7 +93,7 @@ class ChatBot:
             vectorstore=self.vectorstore_public,
             llm=self.llm, 
             search=self.search, 
-            num_search_results=3
+            num_search_results=1
         )
 
 
@@ -103,10 +103,10 @@ class ChatBot:
         
         #Define Tools 
         
-        self.tools = [ Tool(
-            name="in_context_qa",
-            func=self.in_context_qa,
-            description="The in_context_qa function enhances an LLM agent's ability to respond to user queries within a specific database context. This tool should ALWAYS be called before trying to search the web, It takes a user question (query), loads a specified database (database_name), and calculates similarity to determine context relevance. If similarity is high, the LLM generates a response combining the user query and database content. The function outputs a formatted response and updates the chat history for ongoing context preservation."
+        self.tools = [ Tool.from_function(
+                name="in_context_qa",
+                func=self.in_context_qa,
+                description="The in_context_qa function enhances an LLM agent's ability to respond to user queries related to nature, forestry, and related topics within a specific database context. This tool is specifically designed for looking up answers using provided data. It should ALWAYS be called before attempting to search the web. The function takes a user question (query), loads a specified database (database_name), and calculates similarity to determine context relevance. If the similarity is high, the LLM generates a response by combining the user query with the relevant database content. The function outputs a formatted response and updates the chat history for ongoing context preservation."
             ),
             Tool.from_function(
                 func=self.web_QA,
