@@ -2,7 +2,6 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
-from openai.error import OpenAIError
 from langchain.chains import RetrievalQAWithSourcesChain
 from langchain.retrievers.web_research import WebResearchRetriever
 from langchain.vectorstores import FAISS 
@@ -30,7 +29,6 @@ import time
 import os
 import numpy as np
 import pandas as pd
-from openai.error import OpenAIError
 from utils import get_most_similar_embbeding_for_question, get_embedding, insert_data_into_database, split_to_chunks
 
 
@@ -53,7 +51,6 @@ class ChatBot:
         # Set up API keys and environment variables
         os.environ["OPENAI_API_KEY"] = "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"
         os.environ['PINECONE_API_KEY'] = "204755b4-f7d8-4aa4-b16b-764e66796cc3"
-        openai.api_key = os.environ['OPENAI_API_KEY']
         os.environ["GOOGLE_API_KEY"] = "AIzaSyDKxAadUfBZ9oAMDlRjRe0jlp3N0oZKqvg"
         os.environ["GOOGLE_CSE_ID"] = "57d010b1a25ce48c0"
         
@@ -234,7 +231,7 @@ class ChatBot:
             message = f"{llm_response}\n\n Cotent:\n{vector_content}\n\nFile Name:\n{file_name}"
             chat_history.append({'user': False, 'message': message})
 
-        return message, chat_history
+        return llm_response#message#, chat_history
 
     def parsing_dataframe_question(self, string):
         print("parsing_dataframe_question TEST")
