@@ -28,7 +28,6 @@ class ChatBot:
         # Set up API keys and environment variables
         os.environ["OPENAI_API_KEY"] = "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"
         os.environ['PINECONE_API_KEY'] = "204755b4-f7d8-4aa4-b16b-764e66796cc3"
-        openai.api_key = os.environ['OPENAI_API_KEY']
         os.environ["GOOGLE_API_KEY"] = "AIzaSyDKxAadUfBZ9oAMDlRjRe0jlp3N0oZKqvg"
         os.environ["GOOGLE_CSE_ID"] = "57d010b1a25ce48c0"
         

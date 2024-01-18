@@ -1,14 +1,20 @@
 import pandas_functions as BCB 
 import pandas as pd 
 import time
-import openai
+from openai import OpenAI
+import os
 
+client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+results_file = "Test_Results/results_test_1-15-24.csv"
 
 chatbot = BCB.ChatBot()
-file_path = "/Users/viktorciroski/Documents/Github/Forestry_Student/TreeHugger_Exam_ans.csv"
+file_path = "/Users/viktorciroski/Documents/Github/Forestry_Student/datamine_textbox_qa/forestry_type_questions.csv"
+
 print("test")
 df = pd.read_csv(file_path)
+df2 = pd.read_csv("/Users/viktorciroski/Documents/Github/Forestry_Student/TreeHugger_Exam_ans.csv")
 
+df = pd.concat([df[['Question', 'Answer']], df2[['Question', 'Answer']]])
 
 results_dict = {"Question":[], "Pred":[], "GTruth":[], "GPT_Eval":[]}
 
@@ -25,16 +31,14 @@ for i in range(len(df['Question'])):
         prompt = f"Are the following two answers saying the same thing?\n\nPredicted Answer: {response_chatbot['output']}\nGround Truth Answer: {answer}\n\nAnswer:"
 
         # Make an API call for evaluation
-        response = openai.Completion.create(
-            engine="text-davinci-003",
-            prompt=prompt,
-            max_tokens=50,  # Adjust as needed
-            n=1,  # Number of completions
-            stop=None,
-        )
+        response = client.completions.create(engine="text-davinci-003",
+        prompt=prompt,
+        max_tokens=50,  # Adjust as needed
+        n=1,  # Number of completions
+        stop=None)
 
         # Extract the GPT's response
-        gpt_response = response['choices'][0]['text'].strip().lower()
+        gpt_response = response.choices[0].text.strip().lower()
 
         print(question)
         print(answer)
@@ -52,10 +56,10 @@ for i in range(len(df['Question'])):
         print("...")
         print("__________")
         time.sleep(120) 
-    pd.DataFrame(results_dict).to_csv("Test_Results/results_test_1-6-24.csv", index=False)
+    pd.DataFrame(results_dict).to_csv(results_file, index=False)
 
     time.sleep(90) #To avoid OpenAI RateLimit Error
 
 
     #break
-pd.DataFrame(results_dict).to_csv("Test_Results/results_test_1-6-24.csv", index=False)
+pd.DataFrame(results_dict).to_csv(results_file, index=False)

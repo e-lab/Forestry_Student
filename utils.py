@@ -2,16 +2,18 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
-from openai.error import OpenAIError
 
-import openai
+
+from openai import OpenAI
+
+
+
 import sqlite3
 import json
 import time
 import os
 
 import time
-from openai.error import OpenAIError
 import os
 import json
 from sklearn.metrics.pairwise import cosine_similarity
@@ -20,6 +22,7 @@ import pandas as pd
 import sqlite3
 import json
 
+client =  OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
 def get_most_similar_embbeding_for_question(cursor, question):
     #Probably need to send in cursor
@@ -85,14 +88,12 @@ def get_embedding(text_to_embed, max_retries=3, retry_delay=15):
     while retries < max_retries:
         try:
             # Embed a line of text
-            response = openai.Embedding.create(
-                model="text-embedding-ada-002",
-                input=[text_to_embed]
-            )
+            response = client.embeddings.create(model="text-embedding-ada-002",
+            input=[text_to_embed])
             # Extract the AI output embedding as a list of floats
-            embedding = response["data"][0]["embedding"]
+            embedding = response.data[0].embedding
             return embedding
-        except OpenAIError as e:
+        except Exception as e:
             if "ServiceUnavailable" in str(e) and retries < max_retries - 1:
                 print(f"ServiceUnavailable error. Retrying in {retry_delay} seconds...")
                 time.sleep(retry_delay)
