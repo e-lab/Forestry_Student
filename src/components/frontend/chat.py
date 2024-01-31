@@ -118,9 +118,10 @@ class Chat_UI:
     past = self.cookie_manager.get()
 
     if past: 
-      past.append(user_message)
-      past.append(assistant_message)
-      self.cookie_manager.set(past)
+      if user_message not in past and assistant_message not in past:
+        past.append(user_message)
+        past.append(assistant_message)
+        self.cookie_manager.set(past)
     else:
       self.cookie_manager.set(st.session_state.messages)
   

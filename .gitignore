@@ -42,4 +42,5 @@ Test_Results/results_test_1-3-24.csv
 Test_Results/results_test_1-2-24_log.txt
 
 venv/
+__pycache__/
 __pycache__/*.pyc

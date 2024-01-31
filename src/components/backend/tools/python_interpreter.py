@@ -1,7 +1,7 @@
 from langchain_core.output_parsers import StrOutputParser
 from langchain_experimental.utilities import PythonREPL
 from langchain.tools import Tool
-
+from langchain_core.prompts import ChatPromptTemplate
 
 class PythonInterpreter: 
   def __init__(self, llm):
