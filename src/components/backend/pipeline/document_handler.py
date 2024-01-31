@@ -34,11 +34,11 @@ class Document_Handler:
 
     return chunks
     
-  def extract_and_chunk(self, bytes_array):
-    doc = fitz.open(stream=bytes_array, filetype="pdf")
+  def extract_and_chunk(self, file_name):
+    doc = fitz.open(file_name)
 
     text_blocks = []
-    id = str(uuid.uuid4())
+    id = file_name
     
     for page_num in range(len(doc)):
         page = doc[page_num]

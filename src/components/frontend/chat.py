@@ -5,6 +5,8 @@ import extra_streamlit_components as stx
 from annotated_text import annotated_text
 import datetime 
 from langchain_core.messages import AIMessage, HumanMessage
+import fitz, io
+from PIL import Image, ImageDraw
 
 @st.cache_resource(experimental_allow_widgets=True) 
 def get_manager():
@@ -36,12 +38,13 @@ class Chat_UI:
     self.chat() 
 
   def initiate_memory(self): 
-    history = self.get_messages()
+    if len(st.session_state['messages']) < 2:
+      history = self.get_messages()
 
-    if not history:
-      st.session_state['messages'] = [{"role": "assistant", "content": "Hello! The name's euGenio. I'm here to help you with your pipeline. Ask me a question!"}]
-    else: 
-      st.session_state['messages'] = history
+      if not history:
+        st.session_state['messages'] = [{"role": "assistant", "content": "Hello! The name's euGenio. I'm here to help you with your pipeline. Ask me a question!"}]
+      else: 
+        st.session_state['messages'] = history
   
   def append(self, message:dict): 
     st.session_state['messages'].append(message)
@@ -63,18 +66,28 @@ class Chat_UI:
 
   def load_memory(self): 
     messages = st.session_state['messages'] 
+    print(messages)
     if messages: 
-      for message in messages :
-        role = message["role"]
-        content = message["content"]
-        
-        with st.chat_message(role):
-          if type(content) == dict and role == 'assistant': 
-            with st.expander("Thought Process!", expanded=True): 
-              st.json(content)
-            
-          else: 
-            st.markdown(content)
+      with st.spinner('Loading Memory...'):
+        for message in messages :
+          role = message["role"]
+          content = message["content"]
+          
+          with st.chat_message(role):
+            if type(content) == dict and role == 'assistant': 
+              if 'images' in content:
+                with st.expander("Thought Process!", expanded=True): 
+                  st.json({key: value for key, value in content.items() if key != 'images'})
+                with st.expander("Sources!", expanded=False): 
+                  with open('./images.txt', 'r') as f:
+                    vals = f.read()
+                  st.markdown(vals, unsafe_allow_html=True)
+              else: 
+                with st.expander("Thought Process!", expanded=True): 
+                  st.json(content)
+              
+            else: 
+              st.markdown(content)
 
   def format_history(self): 
     messages = st.session_state['messages']
@@ -98,23 +111,34 @@ class Chat_UI:
     self.append(user_message)
 
     with st.chat_message("user"):
-        st.markdown(text)
+      st.markdown(text)
 
     with st.chat_message("assistant"):
-        idx, tool = 0, None
+      idx, tool = 0, None
 
+      with st.expander("Thought Process!", expanded=True):
         with st.spinner('Thinking...'): 
           if st.session_state['documents']:
-            results = self.pipeline.rag.run(query=text) 
-            st.session_state['documents'] = False 
-            st.markdown(results['result'])
+            results = self.pipeline.rag.run(query=text)
+            answer = results['result'] 
+            st.markdown(answer)
           else: 
             results = self.pipeline.run(query=text, chat_history=self.format_history())
-            st.json(results['output'])
+            answer = results['output']
+            st.json(answer)
 
+      if st.session_state['documents']: 
+        with st.expander("Sources!", expanded=True): 
+          vals = self._generate_images(self.pipeline.get_sources(query=f"{text}:{answer}"))
+          st.markdown(vals)
+          with open('./images.txt', 'w') as f:
+            f.write(vals)
+          results['images'] = 'Present'
+          st.session_state['documents'] = False 
 
-        print(results)
-        idx += 1
+        
+      print(results)
+      idx += 1
 
     assistant_message = {"role": "assistant", "content": {key: value for key, value in results.items() if key != 'chat_history'}}
 
@@ -125,6 +149,7 @@ class Chat_UI:
     past = self.cookie_manager.get()
 
     if past: 
+      print(assistant_message)
       if user_message not in past and assistant_message not in past:
         past.append(user_message)
         past.append(assistant_message)
@@ -139,9 +164,11 @@ class Chat_UI:
     self.cookie_manager.delete()
     self.initiate_memory()
 
-  def _generate_images(self, document): 
-
-    images = [self.highlight_bbox_in_pdf(document['id'], document['page_num'], (document['xmin'], document['ymin'], document['xmax'], document['ymax']))]
+  def _generate_images(self, documents): 
+    images = [] 
+    
+    for document in documents: 
+      images += [self.highlight_bbox_in_pdf(document['id'], document['page_num'], (document['xmin'], document['ymin'], document['xmax'], document['ymax']))]
     
     images_markdown = self.create_markdown_with_images(images)
 

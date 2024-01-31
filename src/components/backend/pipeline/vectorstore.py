@@ -45,6 +45,6 @@ class VectorStore:
 
   def get_sources(self, query): 
     return self.collection.query(
-                    query_texts=reply,
+                    query_texts=query,
                     n_results=3
-                )['metadata'][0]
+                )['metadatas'][0]
