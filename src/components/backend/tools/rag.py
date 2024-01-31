@@ -3,13 +3,15 @@ from langchain.tools import Tool
 
 class RAG: 
   def __init__(self, llm, vectorstore): 
-    self.retrieval_qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff",
-        retriever=vectorstore.as_retriever())
+    self.llm = llm 
+    self.vectorstore = vectorstore
 
-  def initialize(self): 
-    return Tool(
-        name = "Document Store",
-        func = self.retrieval_qa.run,
-        description = "Use it to lookup information from document store. \
-                      Always used as first tool"
-    )
+  def run(self, query):
+    retrieval_qa = RetrievalQA.from_chain_type(llm=self.llm, chain_type="stuff",
+        retriever=self.vectorstore.as_retriever())
+ 
+    answer = retrieval_qa.invoke(query)
+    
+    del retrieval_qa
+
+    return answer

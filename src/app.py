@@ -22,7 +22,7 @@ def initalize():
 class UI: 
     def __init__(self): 
         self._pipeline, self.sidebar, self.chat = initalize()
-        st.session_state['documents'] = [0] 
+        st.session_state['documents'] = False
         st.session_state['user_id'] = str(uuid.uuid4())
         st.session_state['api_key'] = "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"
         
