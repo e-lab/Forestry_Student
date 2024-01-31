@@ -106,7 +106,6 @@ class Chat_UI:
         with st.spinner('Thinking...'): 
           if st.session_state['documents']:
             results = self.pipeline.rag.run(query=text) 
-            st.session_state['documents'] = False 
             st.markdown(results['result'])
           else: 
             results = self.pipeline.run(query=text, chat_history=self.format_history())
@@ -138,28 +137,3 @@ class Chat_UI:
   def delete_messages(self): 
     self.cookie_manager.delete()
     self.initiate_memory()
-
-  def _annotated_parser(self, text):
-    pattern = r'\[(.*?)\]'
-    
-    annotated_parts = []
-    last_end = 0
-
-    for match in re.finditer(pattern, text):
-        start, end = match.span()
-
-        annotated_parts.append(text[last_end:start])
-
-        bracketed_text = match.group(1)
-        annotated_parts.append((bracketed_text, 'important'))
-
-        last_end = end
-
-    annotated_parts.append(text[last_end:])
-
-    return tuple(annotated_parts)
-
-
-class CookieTester: 
-  def __init__(self): 
-    self.cookie = None
