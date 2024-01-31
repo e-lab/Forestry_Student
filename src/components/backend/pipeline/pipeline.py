@@ -34,5 +34,5 @@ class Pipeline:
       max_iterations=max_iterations
     )
   
-  def __call__(self, query): 
-    return self.agent.invoke({'input': query, 'chat_history': []})  
+  def run(self, query, chat_history):
+    return self.agent.invoke({'input': query.strip(), 'chat_history': chat_history}) 
