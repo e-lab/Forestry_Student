@@ -45,3 +45,6 @@ class Pipeline:
     self.vectorstore.add(self.document_handler(pdf))
     print('Done')
     return 1
+  
+  def get_sources(self, query): 
+    return self.vectorstore.get_sources(query)

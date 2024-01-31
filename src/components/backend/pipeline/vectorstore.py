@@ -35,3 +35,9 @@ class VectorStore:
     del df 
     
     return 1 
+
+  def get_sources(self, query): 
+    return self.collection.query(
+                    query_texts=reply,
+                    n_results=3
+                )['metadata'][0]

@@ -105,8 +105,13 @@ class Chat_UI:
 
         with st.spinner('Thinking...'): 
           results = self.pipeline.run(query=text, chat_history=self.format_history())
-
+          
         st.markdown(results['output'])
+        
+        with st.expander("Sources", expanded=False): 
+          result = self.pipeline.get_sources(f"{text}: {results['output']}")
+          print(result)
+
         idx += 1
 
     assistant_message = {"role": "assistant", "content": {key: value for key, value in results.items() if key != 'chat_history'}}
@@ -132,26 +137,38 @@ class Chat_UI:
     self.cookie_manager.delete()
     self.initiate_memory()
 
-  def _annotated_parser(self, text):
-    pattern = r'\[(.*?)\]'
+  def _generate_images(self, document): 
+
+    images = [self.highlight_bbox_in_pdf(document['id'], document['page_num'], (document['xmin'], document['ymin'], document['xmax'], document['ymax']))]
     
-    annotated_parts = []
-    last_end = 0
+    images_markdown = self.create_markdown_with_images(images)
 
-    for match in re.finditer(pattern, text):
-        start, end = match.span()
+    return images_markdown
 
-        annotated_parts.append(text[last_end:start])
-
-        bracketed_text = match.group(1)
-        annotated_parts.append((bracketed_text, 'important'))
-
-        last_end = end
-
-    annotated_parts.append(text[last_end:])
-
-    return tuple(annotated_parts)
-
+  def highlight_bbox_in_pdf(self, pdf_path, page_number, bbox):
+      doc = fitz.open(pdf_path)
+      page = doc.load_page(page_number)
+      
+      pix = page.get_pixmap()
+      img = Image.open(io.BytesIO(pix.tobytes()))
+      
+      draw = ImageDraw.Draw(img)
+      draw.rectangle(bbox, outline="red", width=2)
+      
+      img_buffer = io.BytesIO()
+      img.save(img_buffer, format="PNG")  # Save the modified image to the buffer
+      encoded_image = base64.b64encode(img_buffer.getvalue()).decode("utf-8")
+      
+      doc.close()
+      
+      return encoded_image
+  
+  def create_markdown_with_images(self, images):
+    images_html = ""
+    for base64_image in images:
+        img_html = f'<img src="data:image/png;base64,{base64_image}" style="display: block; margin-left: auto; margin-right: auto; width: 80%;">'
+        images_html += img_html + "<br>"
+    return images_html
 
 class CookieTester: 
   def __init__(self): 

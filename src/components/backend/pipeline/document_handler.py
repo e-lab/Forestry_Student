@@ -61,3 +61,4 @@ class Document_Handler:
 
     doc.close()
     return text_blocks
+  
