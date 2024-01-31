@@ -134,8 +134,6 @@ class Chat_UI:
           with open('./images.txt', 'w') as f:
             f.write(vals)
           results['images'] = 'Present'
-          st.session_state['documents'] = False 
-
         
       print(results)
       idx += 1
