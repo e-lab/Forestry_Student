@@ -1,7 +1,7 @@
 from langchain.tools import Tool
 from langchain.chains import RetrievalQAWithSourcesChain
 from langchain.retrievers.web_research import WebResearchRetriever
-from langchain.utilities import GoogleSearchAPIWrapper
+from langchain_community.utilities import GoogleSearchAPIWrapper
 
 class WebSearch: 
   def __init__(self, llm, vectorstore_public): 

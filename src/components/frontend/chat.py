@@ -104,14 +104,16 @@ class Chat_UI:
         idx, tool = 0, None
 
         with st.spinner('Thinking...'): 
-          results = self.pipeline.run(query=text, chat_history=self.format_history())
-          
-        st.markdown(results['output'])
-        
-        with st.expander("Sources", expanded=False): 
-          result = self.pipeline.get_sources(f"{text}: {results['output']}")
-          print(result)
+          if st.session_state['documents']:
+            results = self.pipeline.rag.run(query=text) 
+            st.session_state['documents'] = False 
+            st.markdown(results['result'])
+          else: 
+            results = self.pipeline.run(query=text, chat_history=self.format_history())
+            st.json(results['output'])
 
+
+        print(results)
         idx += 1
 
     assistant_message = {"role": "assistant", "content": {key: value for key, value in results.items() if key != 'chat_history'}}

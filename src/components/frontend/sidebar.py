@@ -66,7 +66,8 @@ class Sidebar:
             st.success(f'File Successfully Processed!')
             my_bar.empty()
           del my_bar
-    st.session_state['documents'][0] += 1
+          
+    st.session_state['documents'] = True
 
   def _show_tools(self): 
     tools = st.sidebar.expander("Tools", expanded=True)

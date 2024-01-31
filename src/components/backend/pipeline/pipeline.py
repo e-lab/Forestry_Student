@@ -22,8 +22,8 @@ class Pipeline:
     self.document_handler = Document_Handler() 
     self.llm = LLM()
     self.vectorstore = VectorStore() 
+    self.rag = RAG(llm=self.llm.llm, vectorstore=self.vectorstore.vectorstore)
     self.tools = [
-      RAG(llm=self.llm.llm, vectorstore=self.vectorstore).initialize(), 
       PythonInterpreter(llm=self.llm.llm).initialize(),
       ArxivSearch().initialize(),
       Calculator(llm=self.llm.llm).initialize(),
