@@ -1,5 +1,6 @@
 from components.backend.pipeline.vectorstore import VectorStore
 from components.backend.pipeline.llm import LLM
+from components.backend.pipeline.document_handler import Document_Handler
 
 import os, io 
 
@@ -7,6 +8,7 @@ from components.backend.tools.python_interpreter import PythonInterpreter
 from components.backend.tools.arxiv_search import ArxivSearch
 from components.backend.tools.calculator import Calculator
 from components.backend.tools.web_search import WebSearch
+from components.backend.tools.rag import RAG
 
 from langchain.agents import initialize_agent
 
@@ -17,9 +19,11 @@ os.environ["GOOGLE_CSE_ID"] = "57d010b1a25ce48c0"
 
 class Pipeline: 
   def __init__(self, max_iterations=5): 
+    self.document_handler = Document_Handler() 
     self.llm = LLM()
     self.vectorstore = VectorStore() 
     self.tools = [
+      RAG(llm=self.llm.llm, vectorstore=self.vectorstore).initialize(), 
       PythonInterpreter(llm=self.llm.llm).initialize(),
       ArxivSearch().initialize(),
       Calculator(llm=self.llm.llm).initialize(),
@@ -34,5 +38,10 @@ class Pipeline:
       max_iterations=max_iterations
     )
   
-  def __call__(self, query): 
-    return self.agent.invoke({'input': query, 'chat_history': []})  
+  def run(self, query, chat_history):
+    return self.agent.invoke({'input': query.strip(), 'chat_history': chat_history}) 
+
+  def add(self, pdf): 
+    self.vectorstore.add(self.document_handler(pdf))
+    print('Done')
+    return 1

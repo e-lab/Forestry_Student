@@ -53,14 +53,14 @@ class Sidebar:
           percent_complete = 0
 
           if pdf.type == "application/pdf":
-            percent_complete += 10 
+            percent_complete += 50 
             my_bar.progress(percent_complete, text=progress_text)
-            progress_text = 'Reading File...'
-            text_blocks = self.pipeline('add', {'pdf': pdf.read()})
-            percent_complete += 40
             progress_text = 'Processing File...'
-            my_bar.progress(percent_complete, text=progress_text)
-            self.pipeline('process', {'text_blocks': text_blocks, 'filename': pdf.name})
+
+            status = self.pipeline.add(pdf.read())
+
+            print(status)
+
             percent_complete += 50
             my_bar.progress(percent_complete, text="Finalizing...")
             st.success(f'File Successfully Processed!')

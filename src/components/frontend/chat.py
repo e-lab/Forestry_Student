@@ -4,6 +4,7 @@ import base64
 import extra_streamlit_components as stx
 from annotated_text import annotated_text
 import datetime 
+from langchain_core.messages import AIMessage, HumanMessage
 
 @st.cache_resource(experimental_allow_widgets=True) 
 def get_manager():
@@ -37,7 +38,6 @@ class Chat_UI:
   def initiate_memory(self): 
     history = self.get_messages()
 
-    print('History: ', history)
     if not history:
       st.session_state['messages'] = [{"role": "assistant", "content": "Hello! The name's euGenio. I'm here to help you with your pipeline. Ask me a question!"}]
     else: 
@@ -73,10 +73,22 @@ class Chat_UI:
             with st.expander("Thought Process!", expanded=True): 
               st.json(content)
             
-            # Highlight the final answer
-            annotated_text(*self._annotated_parser(content[list(content.keys())[-1]]['Observation'])) 
           else: 
             st.markdown(content)
+
+  def format_history(self): 
+    messages = st.session_state['messages']
+
+    if messages:
+      formatted = [] 
+      for message in messages[1:]:
+        if message['role'] == 'user': 
+          formatted.append(HumanMessage(content=str(message['content'])))
+        else: 
+          formatted.append(AIMessage(content=str(message['content'])))
+      return formatted
+    else: 
+      return []
 
   def handle_query(self):
     text = st.session_state["text"] 
@@ -92,7 +104,7 @@ class Chat_UI:
         idx, tool = 0, None
 
         with st.spinner('Thinking...'): 
-          results = self.pipeline(text)
+          results = self.pipeline.run(query=text, chat_history=self.format_history())
 
         st.markdown(results['output'])
         idx += 1
@@ -108,7 +120,6 @@ class Chat_UI:
     if past: 
       past.append(user_message)
       past.append(assistant_message)
-      print('Past: ', past)
       self.cookie_manager.set(past)
     else:
       self.cookie_manager.set(st.session_state.messages)
