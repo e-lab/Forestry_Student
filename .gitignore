@@ -40,3 +40,12 @@ Test_Results/results_test_1-6-24.csv
 Test_Results/results_test_1-3-24_log.txt
 Test_Results/results_test_1-3-24.csv
 Test_Results/results_test_1-2-24_log.txt
+
+venv/
+__pycache__/
+__pycache__/*.pyc
+
+data/ 
+images.txt
+src/*.pdf
+src/*.txt
