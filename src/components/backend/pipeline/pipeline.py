@@ -42,6 +42,8 @@ class Pipeline:
     return self.agent.invoke({'input': query.strip(), 'chat_history': chat_history}) 
 
   def add(self, pdf): 
-    self.vectorstore.add(self.document_handler(pdf))
-    print('Done')
+    try:
+      self.vectorstore.add(self.document_handler(pdf))
+    except AssertionError: 
+      return None 
     return 1

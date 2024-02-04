@@ -28,6 +28,7 @@ class VectorStore:
   def add(self, text_blocks):
     df = pd.DataFrame(text_blocks, columns=['id', 'page_num', 'xmin', 'ymin', 'xmax', 'ymax', 'text'])
 
+    
     assert len(set(df['id'])) == 1
 
     uuids = [str(uuid.uuid4()) for _ in range(len(df))]

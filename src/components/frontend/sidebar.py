@@ -61,10 +61,17 @@ class Sidebar:
 
             print(status)
 
-            percent_complete += 50
-            my_bar.progress(percent_complete, text="Finalizing...")
-            st.success(f'File Successfully Processed!')
-            my_bar.empty()
+            if not status: 
+              st.error('File has no contents to record!')
+              my_bar.empty()
+            elif status == 0: 
+              st.error('File processing failed!')
+              my_bar.empty()
+            else: 
+              percent_complete += 50
+              my_bar.progress(percent_complete, text="Finalizing...")
+              st.success(f'File Successfully Processed!')
+              my_bar.empty()
           del my_bar
           
     st.session_state['documents'] = True
