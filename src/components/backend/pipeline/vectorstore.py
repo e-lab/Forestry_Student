@@ -6,6 +6,8 @@ import os
 import pandas as pd 
 import uuid 
 
+os.environ["OPENAI_API_KEY"] = "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"
+
 class VectorStore: 
   def __init__(self): 
     self.chroma_client = chromadb.Client()
@@ -22,13 +24,18 @@ class VectorStore:
         embedding_function=self.embeddings_model,
     )
   
+  def get(self, query):
+    return self.collection.query(
+        query_texts=[query],
+        n_results=3
+    )
+  
   def as_retriever(self):
     return self.vectorstore.as_retriever(search_type="similarity", search_kwargs={"k":3}) 
   
   def add(self, text_blocks):
     df = pd.DataFrame(text_blocks, columns=['id', 'page_num', 'xmin', 'ymin', 'xmax', 'ymax', 'text'])
 
-    
     assert len(set(df['id'])) == 1
 
     uuids = [str(uuid.uuid4()) for _ in range(len(df))]
@@ -43,3 +50,4 @@ class VectorStore:
     
     return 1 
 
+print(VectorStore().get("Hello, World!"))

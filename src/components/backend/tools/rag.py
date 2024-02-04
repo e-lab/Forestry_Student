@@ -1,17 +1,16 @@
 from langchain.chains import RetrievalQA
 from langchain.tools import Tool
 
-class RAG: 
-  def __init__(self, llm, vectorstore): 
-    self.llm = llm 
-    self.vectorstore = vectorstore
+from langchain.tools.retriever import create_retriever_tool
 
-  def run(self, query):
-    retrieval_qa = RetrievalQA.from_chain_type(llm=self.llm, chain_type="stuff",
-        retriever=self.vectorstore.as_retriever())
- 
-    answer = retrieval_qa.invoke(query)
-    
-    del retrieval_qa
+class RAG:
+    def __init__(self, vectorstore):
+        self.vectorstore = vectorstore
 
-    return answer
+    def initialize(self):
+        return Tool.from_function(
+            func=self.vectorstore.get,
+            name="VectorDB",
+            description="Always begin with this tool. If there is no input documents, then move on to the web_QA. This tool returns documents from the vectorstore based on a query. Pass in a query and get back a list of documents.",
+        )
+

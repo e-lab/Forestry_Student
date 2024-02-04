@@ -43,7 +43,7 @@ class Sidebar:
 
     upload_expander = st.sidebar.expander("File Uploader", expanded=True)
     with upload_expander: 
-      pdf_docs = st.file_uploader('Select Files to Upload', accept_multiple_files=True, type=['pdf', 'txt', 'png', 'jpg'])
+      pdf_docs = st.file_uploader(label='Select Files to Upload', accept_multiple_files=True, type=['pdf', 'txt', 'png', 'jpg'])
       if st.button('Start Upload'): 
         for pdf in pdf_docs:
           file_details = {'Filename': pdf.name, 'FileType': pdf.type, 'FileSize': pdf.size}
@@ -77,7 +77,7 @@ class Sidebar:
     st.session_state['documents'] = True
 
   def _show_tools(self): 
-    tools = st.sidebar.expander("Tools", expanded=True)
+    tools = st.sidebar.expander(label="Tools", expanded=True)
     with tools: 
       options = st.selectbox(
         'List of available tools: ',

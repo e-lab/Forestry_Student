@@ -18,5 +18,5 @@ class WebSearch:
     return Tool.from_function(
         func=RetrievalQAWithSourcesChain.from_chain_type(llm=self.llm, retriever=self.web_retriever),
         name="web_QA",
-        description="web_QA is a web searching tool for the LLM agent, triggered when the similarity score from in-context QA is too low. It dynamically integrates the LLM and a web retriever to broaden knowledge through targeted web searches, enhancing the agent's responsiveness and adaptability to diverse user queries",
+        description="web_QA is a web searching tool for the LLM agent. Use this only after you have tried the VectorDB tool. FIRST, TRY THE VectorDB TOOL.",
     )

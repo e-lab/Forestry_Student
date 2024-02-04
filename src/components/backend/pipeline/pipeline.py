@@ -22,8 +22,8 @@ class Pipeline:
     self.document_handler = Document_Handler() 
     self.llm = LLM()
     self.vectorstore = VectorStore() 
-    self.rag = RAG(llm=self.llm.llm, vectorstore=self.vectorstore.vectorstore)
     self.tools = [
+      RAG(vectorstore=self.vectorstore).initialize(),
       PythonInterpreter(llm=self.llm.llm).initialize(),
       ArxivSearch().initialize(),
       Calculator(llm=self.llm.llm).initialize(),
@@ -39,8 +39,11 @@ class Pipeline:
     )
   
   def run(self, query, chat_history):
-    return self.agent.invoke({'input': query.strip(), 'chat_history': chat_history}) 
-
+    try: 
+      return self.agent.invoke({'input': query.strip(), 'chat_history': chat_history}) 
+    except ValueError:
+      st.error("There was an error with the query. Please try again.")   
+      
   def add(self, pdf): 
     try:
       self.vectorstore.add(self.document_handler(pdf))

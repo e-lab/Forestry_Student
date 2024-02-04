@@ -9,19 +9,19 @@ from components.frontend.sidebar import Sidebar
 from components.backend.pipeline.pipeline import Pipeline
 import os 
 import uuid 
+import extra_streamlit_components as stx
 
 
 st.set_page_config(layout='wide')
 
-
-@st.cache_resource
-def initalize(): 
-    pipeline = Pipeline()
-    return pipeline, Sidebar(pipeline), Chat_UI(pipeline)
-
 class UI: 
     def __init__(self): 
-        self._pipeline, self.sidebar, self.chat = initalize()
+        self.pipeline = Pipeline()
+        self.sidebar = Sidebar(self.pipeline)
+        self.cookie_manager = stx.CookieManager()
+        cookies = self.cookie_manager.get_all()
+        print(cookies)
+        self.chat = Chat_UI(self.pipeline, self.cookie_manager)
         st.session_state['documents'] = False
         st.session_state['user_id'] = str(uuid.uuid4())
         st.session_state['api_key'] = "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"
