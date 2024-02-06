@@ -1,0 +1,15 @@
+chromadb
+extra_streamlit_components
+fitz
+langchain
+langchain_community
+langchain_core
+langchain_experimental
+langchain_openai
+numpy
+pandas
+pydantic
+requests
+st_annotated_text
+streamlit
+frontend
