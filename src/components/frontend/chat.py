@@ -12,9 +12,6 @@ class Chat_UI:
         self.pipeline = pipeline
         self.cookie_manger = cookie_manger
 
-    def render(self):
-        self.chat()
-
     def initiate_memory(self):
         history = self.get_messages()
 
@@ -35,15 +32,12 @@ class Chat_UI:
         # Instantiates the chat history
         self.initiate_memory()
         self.load_memory()
-
-        # Load's the text tab
-        self.load_chatbox()
-
+        
     def load_chatbox(self):
         user_input = st.text_input(
             label="*Got a question?*",
             help="Try to specify keywords and intent in your question!",
-            key="text",
+            key="text"
         )
 
         st.button(label="Send", key="send", on_click=self.handle_query)

@@ -27,18 +27,24 @@ class Sidebar:
       
       st.image('assets/eugenie.png', width=250)
 
-    disabled = True 
-    if 'api_key' not in st.session_state:
-      disabled = False
+    disabled = False 
+    if st.session_state['api_key']:
+      disabled = True
     key = st.sidebar.text_input('', placeholder ='Input your OpenAI API Key: ', type='password', label_visibility='hidden', key='api_key_input', disabled=disabled)
     if key: 
       st.session_state['api_key'] = key
       st.sidebar.success('API Key Successfully Added!')
     st.sidebar.divider() 
 
-    self._upload_widget() 
+    if st.session_state['api_key']: 
+      self._upload_widget() 
     self._show_tools()
-
+  
+    if st.session_state['api_key']: 
+      return 1
+    else: 
+      return 0 
+      
   def _upload_widget(self): 
 
     upload_expander = st.sidebar.expander("File Uploader", expanded=True)
@@ -52,26 +58,29 @@ class Sidebar:
           my_bar = st.progress(0, text=progress_text)
           percent_complete = 0
 
+          percent_complete += 50 
+          my_bar.progress(percent_complete, text=progress_text)
+          progress_text = 'Processing File...'
+
+          print(pdf.type)
           if pdf.type == "application/pdf":
-            percent_complete += 50 
-            my_bar.progress(percent_complete, text=progress_text)
-            progress_text = 'Processing File...'
+            status = self.pipeline.add_pdf(pdf.read())
+          elif pdf.type == 'text/plain':
+            status = self.pipeline.add_text([p.decode("utf-8") for p in pdf])
+          print(status)
 
-            status = self.pipeline.add(pdf.read())
-
-            print(status)
-
-            if not status: 
-              st.error('File has no contents to record!')
-              my_bar.empty()
-            elif status == 0: 
-              st.error('File processing failed!')
-              my_bar.empty()
-            else: 
-              percent_complete += 50
-              my_bar.progress(percent_complete, text="Finalizing...")
-              st.success(f'File Successfully Processed!')
-              my_bar.empty()
+          if not status: 
+            st.error('File has no contents to record!')
+            my_bar.empty()
+          elif status == 0: 
+            st.error('File processing failed!')
+            my_bar.empty()
+          else: 
+            percent_complete += 50
+            my_bar.progress(percent_complete, text="Finalizing...")
+            st.success(f'File Successfully Processed!')
+            my_bar.empty()
+          
           del my_bar
           
     st.session_state['documents'] = True

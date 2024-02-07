@@ -12,8 +12,8 @@ from components.backend.tools.rag import RAG
 
 from langchain.agents import initialize_agent
 
-os.environ["OPENAI_API_KEY"] = "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"
-os.environ['PINECONE_API_KEY'] = "204755b4-f7d8-4aa4-b16b-764e66796cc3"
+# os.environ["OPENAI_API_KEY"] = "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"
+# os.environ['PINECONE_API_KEY'] = "204755b4-f7d8-4aa4-b16b-764e66796cc3"
 os.environ["GOOGLE_API_KEY"] = "AIzaSyDKxAadUfBZ9oAMDlRjRe0jlp3N0oZKqvg"
 os.environ["GOOGLE_CSE_ID"] = "57d010b1a25ce48c0"
 
@@ -44,9 +44,13 @@ class Pipeline:
     except ValueError:
       st.error("There was an error with the query. Please try again.")   
       
-  def add(self, pdf): 
+  def add_pdf(self, pdf): 
     try:
-      self.vectorstore.add(self.document_handler(pdf))
+      self.vectorstore.add_pdf(self.document_handler(pdf))
     except AssertionError: 
       return None 
+    return 1
+
+  def add_text(self, file): 
+    self.vectorstore.add_text(self.document_handler.semantic_chunking(file))
     return 1

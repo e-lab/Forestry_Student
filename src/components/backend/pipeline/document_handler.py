@@ -16,7 +16,11 @@ class Document_Handler:
   def semantic_chunking(self, text, chunk_size=200, overlap=50):
     chunks = []
     current_chunk = ""
-    words = text.split()
+
+    if type(text) == str: 
+      words = text.split()
+    elif type(text) == list: 
+      words = text
 
     for word in words:
         current_chunk += (word + " ")
@@ -33,6 +37,7 @@ class Document_Handler:
         chunks.append(current_chunk.strip())
 
     return chunks
+
     
   def extract_and_chunk(self, bytes_array):
     doc = fitz.open(stream=bytes_array, filetype="pdf")

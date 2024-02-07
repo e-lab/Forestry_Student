@@ -11,28 +11,37 @@ import os
 import uuid 
 import extra_streamlit_components as stx
 
+# "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"
 
 st.set_page_config(layout='wide')
 
 class UI: 
     def __init__(self): 
-        self.pipeline = Pipeline()
-        self.sidebar = Sidebar(self.pipeline)
         self.cookie_manager = stx.CookieManager()
-        cookies = self.cookie_manager.get_all()
-        print(cookies)
-        self.chat = Chat_UI(self.pipeline, self.cookie_manager)
-        st.session_state['documents'] = False
-        st.session_state['user_id'] = str(uuid.uuid4())
-        st.session_state['api_key'] = "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"
-        
+
+        if 'api_key' not in st.session_state: 
+            st.session_state['api_key'] = None 
         if 'messages' not in st.session_state: 
             st.session_state['messages'] = [] 
-    
+
+
+        cookies = self.cookie_manager.get_all()
+        st.session_state['documents'] = False
+        st.session_state['user_id'] = str(uuid.uuid4())
+
+        self.sidebar = Sidebar(None)
+        self.chat = Chat_UI(None, self.cookie_manager)
+
+        
     def render(self): 
-      self.sidebar() 
+      status = self.sidebar() 
       self.chat() 
-      
+      if status: 
+        self.pipeline = Pipeline()
+        self.sidebar.pipeline = self.pipeline
+        self.chat.pipeline = self.pipeline
+        self.chat.load_chatbox()
+
 def main(): 
     UI().render()
 
