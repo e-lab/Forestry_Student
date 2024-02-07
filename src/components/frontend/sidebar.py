@@ -36,15 +36,13 @@ class Sidebar:
       st.sidebar.success('API Key Successfully Added!')
     st.sidebar.divider() 
 
-    if st.session_state['api_key']: 
-      self._upload_widget() 
     self._show_tools()
   
     if st.session_state['api_key']: 
       return 1
     else: 
       return 0 
-      
+
   def _upload_widget(self): 
 
     upload_expander = st.sidebar.expander("File Uploader", expanded=True)

@@ -39,6 +39,7 @@ class UI:
       if status: 
         self.pipeline = Pipeline()
         self.sidebar.pipeline = self.pipeline
+        self.sidebar._upload_widget()
         self.chat.pipeline = self.pipeline
         self.chat.load_chatbox()
 

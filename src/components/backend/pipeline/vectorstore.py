@@ -24,10 +24,12 @@ class VectorStore:
     )
   
   def get(self, query):
-    return self.collection.query(
+    x = self.collection.query(
         query_texts=[query],
         n_results=3
     )
+    print(x)
+    return x
   
   def as_retriever(self):
     return self.vectorstore.as_retriever(search_type="similarity", search_kwargs={"k":3}) 
