@@ -2,6 +2,7 @@ import streamlit as st
 import base64, os 
 import time 
 import io
+import glob
 
 class Sidebar: 
   def __init__(self, pipeline): 
@@ -31,6 +32,7 @@ class Sidebar:
     if st.session_state['api_key']:
       disabled = True
     key = st.sidebar.text_input('', placeholder ='Input your OpenAI API Key: ', type='password', label_visibility='hidden', key='api_key_input', disabled=disabled)
+    
     if key: 
       st.session_state['api_key'] = key
       st.sidebar.success('API Key Successfully Added!')
@@ -47,10 +49,14 @@ class Sidebar:
 
     upload_expander = st.sidebar.expander("File Uploader", expanded=True)
     with upload_expander: 
-      pdf_docs = st.file_uploader(label='Select Files to Upload', accept_multiple_files=True, type=['pdf', 'txt', 'png', 'jpg'])
+      pdf_docs = st.file_uploader(label='Select Files to Upload', accept_multiple_files=True, type=['pdf', 'txt', 'csv'])
       if st.button('Start Upload'): 
+
+        if len(self.pipeline.document_handler) > 5: 
+          st.error('Document limit reached for this demo app!')
+          return
+          
         for pdf in pdf_docs:
-          file_details = {'Filename': pdf.name, 'FileType': pdf.type, 'FileSize': pdf.size}
 
           progress_text = 'Checking File...'
           my_bar = st.progress(0, text=progress_text)
@@ -60,58 +66,71 @@ class Sidebar:
           my_bar.progress(percent_complete, text=progress_text)
           progress_text = 'Processing File...'
 
-          print(pdf.type)
-          if pdf.type == "application/pdf":
-            status = self.pipeline.add_pdf(pdf.read())
-          elif pdf.type == 'text/plain':
-            status = self.pipeline.add_text([p.decode("utf-8") for p in pdf])
-          print(status)
-
-          if not status: 
-            st.error('File has no contents to record!')
-            my_bar.empty()
-          elif status == 0: 
-            st.error('File processing failed!')
-            my_bar.empty()
+          if pdf.type == 'application/pdf':
+            with open(f"{os.environ['TMP']}/{pdf.name}", 'wb') as f: 
+              f.write(pdf.read())
           else: 
-            percent_complete += 50
-            my_bar.progress(percent_complete, text="Finalizing...")
-            st.success(f'File Successfully Processed!')
-            my_bar.empty()
+            with open(f"{os.environ['TMP']}/{pdf.name}", 'w') as f: 
+              f.write(pdf.read())
+            
+          percent_complete += 50
+          my_bar.progress(percent_complete, text="Finalizing...")
+          st.success(f'File Successfully Processed!')
+
+          my_bar.empty()
           
           del my_bar
-          
-    st.session_state['documents'] = True
+    
+  def _delete_widget(self): 
 
-  def _show_tools(self): 
-    tools = st.sidebar.expander(label="Tools", expanded=True)
-    with tools: 
-      options = st.selectbox(
-        'List of available tools: ',
-        ('Chroma-DB', 'Web-Search', 'arXiv-Search', 'Calculator-App', 'Python-Interpreter'))
+    del_expander = st.sidebar.expander("File Deleter", expanded=True)
+    with del_expander: 
+      rag  = st.multiselect('Documents', 
+          [fil.replace(f"{os.environ['TMP']}", '') for fil in glob.glob(f"{os.environ['TMP']}/*.pdf")]+[fil.replace(f"{os.environ['TMP']}", '') for fil in glob.glob(f"{os.environ['TMP']}/*.txt")], 
+          placeholder="Select Document(s) to remove", key="rag_del")
       
-      if options == 'Chroma-DB':
-        st.markdown("""
-        ## Chroma-DB
-        Chroma HTTP.Client object class can be used to retrieve documents with metadata based on a corresponding query embedding
-        """)
-      elif options == 'Web-Search':
-        st.markdown("""
-        ## Web-Search
-        A module which can search the web and just return the results
-        """)
-      elif options == 'arXiv-Search':
-        st.markdown("""
-        ## arXiv-Search
-        A module which can search arXiv's research repository with abstracts, papers, and authors.
-        """)
-      elif options == 'Calculator-App':
-        st.markdown("""
-        ## Calculator-App
-        A module to which can you send in a formula in the form of a string
-        """)
-      elif options == 'Python-Interpreter':
-        st.markdown("""
-        ## Python-Interpreter
-        A module to which can you send in code as a string with delimiters, and get output back
-        """)
+      csv  = st.multiselect('Data Files', 
+          [fil.replace(f"{os.environ['TMP']}", '') for fil in glob.glob(f"{os.environ['TMP']}/*.csv")], 
+          placeholder="Select CSV(s) to remove", key="csv_del")
+
+      if st.button('Delete Files'): 
+        files = rag + csv
+        for fil in files: 
+          os.remove(f"{os.environ['TMP']}"+fil)
+
+            
+  def _show_tools(self):
+      tools = st.sidebar.expander(label="Tools", expanded=True)
+      with tools:
+          options = st.selectbox(
+              'List of available tools: ',
+              ('InContext QA', 'Python Interpreter', 'ArXiv Search', 'Calculator', 'Web Search')
+          )
+
+          if options == 'InContext QA':
+              st.markdown("""
+              ## InContext QA
+              A tool that leverages a vector store for retrieving documents with metadata based on query embeddings. Ideal for contextual inquiries and deep dives into specific topics.
+              """)
+          elif options == 'Python Interpreter':
+              st.markdown("""
+              ## Python Interpreter
+              A flexible module where you can send Python code as a string, execute it, and receive the output. Supports a wide range of Python functionality for dynamic computing.
+              """)
+          elif options == 'ArXiv Search':
+              st.markdown("""
+              ## ArXiv Search
+              Directly search arXiv's vast repository of research papers, abstracts, and authors to find academic works relevant to your query. Essential for researchers and scholars.
+              """)
+          elif options == 'Calculator':
+              st.markdown("""
+              ## Calculator
+              Send mathematical formulas as strings to this module to calculate and return results instantly. Useful for quick calculations without leaving the application.
+              """)
+          elif options == 'Web Search':
+              st.markdown("""
+              ## Web Search
+              Utilizes a combination of LLM and a public vector store to perform web searches, returning relevant results. Streamlines information retrieval directly within the application.
+              """)
+
+

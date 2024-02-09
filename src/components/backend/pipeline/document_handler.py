@@ -3,8 +3,8 @@ import fitz
 import requests
 import time as time
 import uuid 
-import streamlit as st 
-import base64
+import streamlit as st
+import base64, glob, os
 
 class Document_Handler: 
   def __init__(self):
@@ -13,7 +13,7 @@ class Document_Handler:
   def __call__(self, bytes_array):
     return self.extract_and_chunk(bytes_array) 
 
-  def semantic_chunking(self, text, chunk_size=200, overlap=50):
+  def smart_chunking(self, text, chunk_size=200, overlap=50):
     chunks = []
     current_chunk = ""
 
@@ -37,13 +37,11 @@ class Document_Handler:
         chunks.append(current_chunk.strip())
 
     return chunks
-
-    
+   
   def extract_and_chunk(self, bytes_array):
     doc = fitz.open(stream=bytes_array, filetype="pdf")
 
-    text_blocks = []
-    id = str(uuid.uuid4())
+    text_blocks = ""
     
     for page_num in range(len(doc)):
         page = doc[page_num]
@@ -51,18 +49,33 @@ class Document_Handler:
 
         for b in blocks:
             if "lines" in b: 
-                bbox = fitz.Rect(b["bbox"])
+                # bbox = fitz.Rect(b["bbox"])
                 text = " ".join([" ".join([span["text"] for span in line["spans"]]) for line in b["lines"]])
                 
-                if len(text.split()) > 100:
-                    chunks = self.semantic_chunking(text)
-                else:
-                    chunks = [text]
+                # if len(text.split()) > 100:
+                #     chunks = self.smart_chunking(text)
+                # else:
+                #     chunks = [text]
 
-                for chunk in chunks:
-                    text_blocks.append((id, page_num, bbox.x0, bbox.y0, bbox.x1, bbox.y1, chunk))
-        
+                # for chunk in chunks:
+                #     text_blocks.append((id, page_num, bbox.x0, bbox.y0, bbox.x1, bbox.y1, chunk))
+                text_blocks += text 
+
         print('here')
 
     doc.close()
     return text_blocks
+
+  def load(self, paths):
+    total = [] 
+    for path in paths: 
+      if path.endswith(".pdf"):
+        with open(path, "rb") as f: 
+          total = [self.extract_and_chunk(f.read())]
+      elif path.endswith(".txt"): 
+        with open(path, "r") as f: 
+          total.extend(self.smart_chunking(f.read()))
+    return total 
+    
+  def __len__(self):
+    return len(glob.glob(f"{os.environ['TMP']}/*.pdf") + glob.glob(f"{os.environ['TMP']}/*.txt") + glob.glob(f"{os.environ['TMP']}/*.csv"))

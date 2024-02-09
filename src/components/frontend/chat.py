@@ -5,7 +5,7 @@ import extra_streamlit_components as stx
 from annotated_text import annotated_text
 import datetime
 from langchain_core.messages import AIMessage, HumanMessage
-
+import glob 
 
 class Chat_UI:
     def __init__(self, pipeline, cookie_manger):
@@ -28,25 +28,56 @@ class Chat_UI:
     def append(self, message: dict):
         st.session_state["messages"].append(message)
 
-    def __call__(self):
+    def initialize(self):
+
+        st.markdown("""
+        <style>
+               .block-container {
+                    padding-top: 0.2rem;
+                    padding-bottom: 0.2rem;
+                }
+        </style>
+        """, unsafe_allow_html=True)
+
         # Instantiates the chat history
+        if "query" not in st.session_state: 
+            st.session_state.query = ""
+
         self.initiate_memory()
         self.load_memory()
+        self.load_chatbox()
         
     def load_chatbox(self):
-        user_input = st.text_input(
-            label="*Got a question?*",
-            help="Try to specify keywords and intent in your question!",
-            key="text"
-        )
+        col1, col2 = st.columns([5,1]) 
+        with col1: 
+            user_input = st.text_input(
+                label="",
+                label_visibility='collapsed',
+                help="Try to specify keywords and intent in your question!",
+                key="user_input"
+            )
 
-        st.button(label="Send", key="send", on_click=self.handle_query)
+        with col2: 
+            submit_text = st.button(label="Send", use_container_width=True, type="primary", key="submit_text")
 
-        if st.button(label="Delete History", use_container_width=True, type="primary"):
+        rag  = st.multiselect('Documents', 
+            [fil.replace(f"{os.environ['TMP']}", '') for fil in glob.glob(f"{os.environ['TMP']}/*.pdf")]+[fil.replace(f"{os.environ['TMP']}", '') for fil in glob.glob(f"{os.environ['TMP']}/*.txt")], 
+            placeholder="Select Document(s) to chat with", key="rag")
+        
+        csv  = st.multiselect('Data Files', 
+            [fil.replace(f"{os.environ['TMP']}", '') for fil in glob.glob(f"{os.environ['TMP']}/*.csv")], 
+            placeholder="Select CSV(s) to chat with", key="csv")
+                
+
+        if st.button(label="Delete History", use_container_width=True):
             self.delete_messages()
 
+        if submit_text and user_input: 
+            self.handle_query(user_input, csv, rag)
+            user_input = ""
+
     def load_memory(self):
-        messages = self.get_messages()
+        messages = st.session_state["messages"] 
         # print("memory loading: ", messages)
         if messages:
             for message in messages:
@@ -74,10 +105,7 @@ class Chat_UI:
         else:
             return []
 
-    def handle_query(self):
-        text = st.session_state["text"]
-        st.session_state["text"] = ""
-
+    def handle_query(self, text, csv, rag):
         user_message = {"role": "user", "content": text}
         self.append(user_message)
 
@@ -88,26 +116,35 @@ class Chat_UI:
             idx, tool = 0, None
 
             with st.spinner("Thinking..."):
-                results = self.pipeline.run(
-                    query=text, chat_history=self.format_history()
+                results = self.pipeline.run_normal(
+                    query=text, chat_history=self.format_history(), 
+                    csv_paths=[f"{os.environ['TMP']}"+c for c in csv], 
+                    pdf_paths=[f"{os.environ['TMP']}"+r for r in rag]
                 )
-            
-            # print("Results: ", results)
-            st.json({
-                key: value for key, value in results.items() if key != "chat_history"
-            })
+
+                print(results)
+
+
+            with st.expander('Thought Process:', expanded=False): 
+                st.json({
+                    'input': text,
+                    'output': results['output'],
+                })
+
+            st.markdown(f"`{results['output']}`")
+
 
         assistant_message = {
             "role": "assistant",
             "content": {
-                key: value for key, value in results.items() if key != "chat_history"
+                    'input': text,
+                    'output': results['output'],
             },
         }
+
         self.append(assistant_message)
 
         self.store_messages(user_message, assistant_message)
-
-        # print("Messages: ", st.session_state["messages"])
 
     def store_messages(self, user_message, assistant_message):
         past = st.session_state["messages"]
@@ -122,4 +159,3 @@ class Chat_UI:
 
     def delete_messages(self):
         self.cookie_manger.delete(cookie="messages")
-        self.initiate_memory()

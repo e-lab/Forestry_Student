@@ -17,6 +17,6 @@ class WebSearch:
   def initialize(self):
     return Tool.from_function(
         func=RetrievalQAWithSourcesChain.from_chain_type(llm=self.llm, retriever=self.web_retriever),
-        name="web_QA",
-        description="web_QA is a web searching tool for the LLM agent. Use this only after you have tried the VectorDB tool. FIRST, TRY THE VectorDB TOOL.",
+        name="web_qa",
+        description="web_QA is a web searching tool for the LLM agent. USE THIS ONLY AFTER USING in_context_qa.",
     )

@@ -20,28 +20,51 @@ class UI:
         self.cookie_manager = stx.CookieManager()
 
         if 'api_key' not in st.session_state: 
-            st.session_state['api_key'] = None 
+            st.session_state['api_key'] = "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" 
+            self.pipeline = None
         if 'messages' not in st.session_state: 
             st.session_state['messages'] = [] 
+        if 'user_id' not in st.session_state: 
+            st.session_state['user_id'] =  str(uuid.uuid4())    
 
-
-        cookies = self.cookie_manager.get_all()
-        st.session_state['documents'] = False
-        st.session_state['user_id'] = str(uuid.uuid4())
-
+        _ = self.cookie_manager.get_all()
         self.sidebar = Sidebar(None)
         self.chat = Chat_UI(None, self.cookie_manager)
 
         
     def render(self): 
-      status = self.sidebar() 
-      self.chat() 
-      if status: 
-        self.pipeline = Pipeline()
-        self.sidebar.pipeline = self.pipeline
-        self.sidebar._upload_widget()
-        self.chat.pipeline = self.pipeline
-        self.chat.load_chatbox()
+        st.markdown("""
+        <style>
+               .block-container {
+                    padding-top: 0.5rem;
+                    padding-bottom: 0.2rem;
+                }
+        </style>
+        """, unsafe_allow_html=True)
+
+        status = self.sidebar() 
+
+        empty = st.empty() 
+
+        print("I'm being reloaded now")
+        print("API Key: ", st.session_state['api_key'])
+
+        if not status: 
+            with empty: 
+                with st.chat_message("assistant"):
+                    st.markdown("Please enter your `OPENAI_API_KEY` to begin!")
+        else: 
+            empty.empty()
+            self.pipeline = Pipeline()
+            self.sidebar.pipeline = self.pipeline
+            self.chat.pipeline = self.pipeline
+
+            st.session_state['documents'] = len(self.pipeline.document_handler)
+
+            self.sidebar._upload_widget()
+            self.sidebar._delete_widget()
+            self.chat.initialize()
+
 
 def main(): 
     UI().render()
