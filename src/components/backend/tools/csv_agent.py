@@ -31,6 +31,6 @@ class CSVAgent:
     return Tool.from_function( 
       func=self.invoke, 
       name="csv_agent",
-      description="""The CSV Agent runs python code to answer your question about it's dataframes. 
+      description="""The CSV Agent runs python code to answer your question about it's dataframes. Make your questions detailed with terminologies.
       Pass in a query in the form a string and this function will return the information you want."""
     )

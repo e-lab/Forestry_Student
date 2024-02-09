@@ -15,3 +15,5 @@ tmp/*.csv
 tmp/*.txt
 tmp/*.pdf
 tmp/data-gym-cache/
+
+.env

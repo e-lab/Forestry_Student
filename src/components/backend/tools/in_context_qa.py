@@ -10,6 +10,6 @@ class InContextQA:
         return create_retriever_tool(
             self.vectorstore.as_retriever(path, document_handler),
             "in_context_qa",
-            "Searches for documents, and returns the most relevant ones. Lower distance score means higher relevance. Use this to answer questions with unfamiliar terms",
+            "Searches for documents, and returns the most relevant ones. Lower distance score means higher relevance. Use this to answer questions with unfamiliar terms and people.",
         )
 

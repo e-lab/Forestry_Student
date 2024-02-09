@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Ciroski"
+  given-names: "Viktor"
+- family-names: "Culurciello"
+  given-names: "Eugenio"
+- family-names: "Ramishettt"
+  given-names: "Sravani"
+- family-names: "Wadekar"
+  given-names: "Shakti"
+title: "Forest Intellect Research & Technology System"
+version: 0.0.1
+url: "https://github.com/e-lab/Forestry_Student/tree/main"

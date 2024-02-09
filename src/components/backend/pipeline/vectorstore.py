@@ -9,7 +9,7 @@ from langchain_experimental.text_splitter import SemanticChunker
 
 class VectorStore: 
   def __init__(self): 
-    self.embeddings_model = OpenAIEmbeddings(openai_api_key="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")
+    self.embeddings_model = OpenAIEmbeddings(openai_api_key=st.session_state['api_key'])
     self.vectorstore = Chroma.from_documents(
       [Document(page_content='', metadata={'source': 'local'})],
       self.embeddings_model

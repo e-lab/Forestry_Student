@@ -21,18 +21,18 @@ import re
 def timeout(limit=90):
     def decorator(func):
         def wrapper(*args, **kwargs):
-            result = [None]  # Use a list to store function result due to Python's scoping rules
+            result = [None] 
 
             def target():
                 result[0] = func(*args, **kwargs)
 
             thread = threading.Thread(target=target)
             thread.start()
-            thread.join(limit)  # Wait for the specified time limit
+            thread.join(limit)  
 
             if thread.is_alive():
                 print("Function execution exceeded 1.5 minutes, returning None.")
-                thread.join()  # Ensure the thread has finished
+                thread.join()  
                 return None
             return result[0]
         return wrapper

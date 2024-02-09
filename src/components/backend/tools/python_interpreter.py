@@ -30,11 +30,6 @@ class PythonInterpreter:
     return Tool.from_function(
       func=self.python_interpreter,
       name="python_interpreter",
-      description="""The Python Code Generator Tool is a sophisticated utility designed to craft Python code solutions for a wide array of questions. When provided with a question, this tool leverages advanced algorithms to generate concise and efficient Python code snippets as answers.
-
-                      Usage Instructions:
-
-                      Pose a question requiring a Python code solution.
-                      If existing tools are deemed insufficient for the task, instruct the Assistant to utilize the Python Code Generator Tool.
-                      Expect a response in the form of a Markdown-formatted Python code block, enclosed within triple backticks.""",
+      description="""When provided with a question, this tool leverages advanced algorithms to generate concise and efficient Python code snippets as answers.
+      Pose a question requiring a Python code solution. Expect a response in the form of a Markdown-formatted Python code block, enclosed within triple backticks.""",
     )

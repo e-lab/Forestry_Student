@@ -49,19 +49,8 @@ class Document_Handler:
 
         for b in blocks:
             if "lines" in b: 
-                # bbox = fitz.Rect(b["bbox"])
                 text = " ".join([" ".join([span["text"] for span in line["spans"]]) for line in b["lines"]])
-                
-                # if len(text.split()) > 100:
-                #     chunks = self.smart_chunking(text)
-                # else:
-                #     chunks = [text]
-
-                # for chunk in chunks:
-                #     text_blocks.append((id, page_num, bbox.x0, bbox.y0, bbox.x1, bbox.y1, chunk))
                 text_blocks += text 
-
-        print('here')
 
     doc.close()
     return text_blocks

@@ -10,5 +10,5 @@ class Calculator:
     return Tool.from_function(
         func=LLMMathChain.from_llm(llm=self.llm, verbose=True).run,
         name="Calculator",
-        description="useful for when you need to answer questions about math",
+        description="useful for when you need to answer questions about math. Pass in an equation as a string.",
     )

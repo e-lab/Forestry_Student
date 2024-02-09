@@ -110,28 +110,27 @@ class Sidebar:
 
           if options == 'InContext QA':
               st.markdown("""
-              ## InContext QA
               A tool that leverages a vector store for retrieving documents with metadata based on query embeddings. Ideal for contextual inquiries and deep dives into specific topics.
               """)
           elif options == 'Python Interpreter':
               st.markdown("""
-              ## Python Interpreter
               A flexible module where you can send Python code as a string, execute it, and receive the output. Supports a wide range of Python functionality for dynamic computing.
               """)
           elif options == 'ArXiv Search':
               st.markdown("""
-              ## ArXiv Search
               Directly search arXiv's vast repository of research papers, abstracts, and authors to find academic works relevant to your query. Essential for researchers and scholars.
               """)
           elif options == 'Calculator':
               st.markdown("""
-              ## Calculator
               Send mathematical formulas as strings to this module to calculate and return results instantly. Useful for quick calculations without leaving the application.
               """)
           elif options == 'Web Search':
               st.markdown("""
-              ## Web Search
               Utilizes a combination of LLM and a public vector store to perform web searches, returning relevant results. Streamlines information retrieval directly within the application.
+              """)
+          elif options == 'Data Agent':
+              st.markdown("""
+              Allows people to chat with user's data (<10MB/file) and make visualizations with personal data. 
               """)
 
 

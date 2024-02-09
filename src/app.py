@@ -1,8 +1,3 @@
-# __import__('pysqlite3')
-# import sys
-# sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
-# import sqlite3
-
 import streamlit as st 
 from components.frontend.chat import Chat_UI
 from components.frontend.sidebar import Sidebar
@@ -11,8 +6,6 @@ import os
 import uuid 
 import extra_streamlit_components as stx
 
-# "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"
-
 st.set_page_config(layout='wide')
 
 class UI: 
@@ -20,7 +13,7 @@ class UI:
         self.cookie_manager = stx.CookieManager()
 
         if 'api_key' not in st.session_state: 
-            st.session_state['api_key'] = "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" 
+            st.session_state['api_key'] = str(os.environ['OPENAI_API_KEY']) if os.environ['OPENAI_API_KEY'] else None 
             self.pipeline = None
         if 'messages' not in st.session_state: 
             st.session_state['messages'] = [] 
