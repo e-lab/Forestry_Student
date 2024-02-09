@@ -1,11 +1,11 @@
 cff-version: 1.2.0
-message: "If you use this software, please cite it as below."
+message: "We appreciate it if you would please cite this repo if you found the library useful for your work."
 authors:
 - family-names: "Ciroski"
   given-names: "Viktor"
 - family-names: "Culurciello"
   given-names: "Eugenio"
-- family-names: "Ramishettt"
+- family-names: "Ramishetty"
   given-names: "Sravani"
 - family-names: "Wadekar"
   given-names: "Shakti"

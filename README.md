@@ -113,9 +113,16 @@ http://localhost:8501
 - If you encounter any issues with Docker, ensure Docker is running on your system and try restarting it.
 - For problems related to API keys, double-check that they are correctly entered in the `.env` file with no extra spaces or characters.
 
-## Contributing
-
-We welcome contributions! If you'd like to contribute, please fork the repository and submit a pull request with your changes.
-
 ## Acknowledgement 
 This project has been undertaken in the Eugenio Culurciello e-lab at Purdue University, in collaboration with the FACAI lab. We extend our sincere appreciation to both labs for their invaluable contributions and collaborative efforts. Furthermore, we acknowledge and express gratitude for the resources generously provided by the Purdue Institute of Physical AI, which have played a crucial role in supporting and advancing our research endeavors.
+
+## Citation 
+
+```
+@software{Ciroski_Forest_Intellect_Research,
+author = {Ciroski, Viktor and Culurciello, Eugenio and Ramishettt, Sravani and Wadekar, Shakti},
+title = {{Forest Intellect Research & Technology System}},
+url = {https://github.com/e-lab/Forestry_Student/tree/main},
+version = {0.0.1}
+}
+```
