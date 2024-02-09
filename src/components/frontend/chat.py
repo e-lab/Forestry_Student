@@ -34,7 +34,7 @@ class Chat_UI:
         <style>
                .block-container {
                     padding-top: 0.2rem;
-                    padding-bottom: 0.2rem;
+                    padding-bottom: 2rem;
                 }
         </style>
         """, unsafe_allow_html=True)
@@ -45,13 +45,16 @@ class Chat_UI:
 
         self.initiate_memory()
         self.load_memory()
+        st.divider()
         self.load_chatbox()
+        st.divider()
         
     def load_chatbox(self):
         col1, col2 = st.columns([5,1]) 
         with col1: 
             user_input = st.text_input(
-                label="",
+                label='',
+                placeholder="Enter your question here:",
                 label_visibility='collapsed',
                 help="Try to specify keywords and intent in your question!",
                 key="user_input"
@@ -86,7 +89,9 @@ class Chat_UI:
 
                 with st.chat_message(role):
                     if type(content) == dict and role == "assistant":
-                        st.json(content)
+                        st.json({key: value for key, value in content.items() if key != "file_path"})
+                        if 'file_path' in content and content['file_path']:
+                            st.image(content["file_path"])
 
                     else:
                         st.markdown(content)
@@ -131,7 +136,10 @@ class Chat_UI:
                     'output': results['output'],
                 })
 
-            st.markdown(f"`{results['output']}`")
+            if results["file_path"]:
+                st.image(results["file_path"])
+            else: 
+                st.markdown(f"`{results['output']}`")
 
 
         assistant_message = {
@@ -139,6 +147,7 @@ class Chat_UI:
             "content": {
                     'input': text,
                     'output': results['output'],
+                    'file_path': results['file_path'] if "file_path" in results else ''
             },
         }
 

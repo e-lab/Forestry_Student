@@ -97,6 +97,7 @@ class Sidebar:
         files = rag + csv
         for fil in files: 
           os.remove(f"{os.environ['TMP']}"+fil)
+        st.success('Files Successfully Deleted!')
 
             
   def _show_tools(self):

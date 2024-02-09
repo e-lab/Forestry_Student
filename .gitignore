@@ -10,3 +10,8 @@ __pycache__/*.pyc
 
 src/.*/
 tmp/
+tmp/*/
+tmp/*.csv
+tmp/*.txt
+tmp/*.pdf
+tmp/data-gym-cache/

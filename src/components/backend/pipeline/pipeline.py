@@ -16,6 +16,7 @@ from langchain.agents import AgentExecutor
 from langchain import hub
 import time
 import threading
+import re 
 
 def timeout(limit=90):
     def decorator(func):
@@ -44,6 +45,7 @@ class Pipeline:
 
   @timeout(limit=90)
   def run_normal(self, query, chat_history, csv_paths=[], pdf_paths=[]):
+    
     llm = LLM()
     vectorstore = VectorStore() 
 
@@ -66,20 +68,31 @@ class Pipeline:
     tools_agent = AgentExecutor(agent=tools_agent, tools=tools, verbose=True, handle_parsing_errors=True, 
             max_iterations=self.max_iterations)
 
-    return tools_agent.invoke({'input': f"""
+    result = tools_agent.invoke({'input': f"""
     <system> 
     IF YOU ARE ASKED ABOUT PEOPLE or SCIENTIFIC TERMS: START WITH in_context_qa.
     FOR UNKNOWN NOUNS, NAMES AND OBJECTS: START WITH in_context_qa, THEN arxiv_search.
     FOR QUESTIONS ABOUT DATA: START WITH csv_agent.
-    IF YOU ARE ASKED TO VISUALIZE DATA: START WITH csv_agent, ASK IT TO SUMMARIZE RESULTS INTO A PYTHON SCRIPT, THEN ask python_interpreter TO RUN IT.
-    IF YOU ASKED TO MAKE SOME GRAPHS: START WITH python_interpreter.
+    IF YOU ARE ASKED TO VISUALIZE DATA: START WITH csv_agent, ASK IT TO MAKE A DF QUERYING COMMAND, PASS IT TO python_interpreter TO USE THE QUERY TO SAVE A VISUALIZATION. In this case, return ONLY "||{os.environ['TMP']}/*.png||". 
     </system>
 
     <input>
     You have the following files to chat with: {pdf_paths}
     You have the following CSVs to chat with: {csv_paths}
     Here is your question: <question>{query}</question> 
-
-
     </input>""".strip(), 'chat_history': chat_history})
 
+    if self.extract_img_path(result['output']): 
+      result['file_path'] = f"{self.extract_img_path(result['output'])}"
+    
+    return result
+
+  def extract_img_path(self, text): 
+    pattern = r'[\w/.\-]+/\w+.\w+'
+
+    match = re.search(pattern, text)
+    if match:
+        file_path = match.group()
+        return file_path
+    else:
+        return None 

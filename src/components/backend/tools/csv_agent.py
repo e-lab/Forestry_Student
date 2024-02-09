@@ -1,6 +1,7 @@
 from langchain.agents.agent_types import AgentType
 from langchain_experimental.agents import create_csv_agent
 from langchain.tools import Tool
+import os 
 
 class CSVAgent: 
   def __init__(self, llm, csv_file_paths):
@@ -18,11 +19,12 @@ class CSVAgent:
   
   def invoke(self, query): 
     """Pass in a query regarding the dataframes in question, and this function will return information"""
-    answer = self.agent(query)
-    if answer["intermediate_steps"]:
-      action = answer["intermediate_steps"][-1][0].tool_input["query"]
-      print(answer, action)
-      return (answer, action)
+    
+    answer = self.agent(f"""
+    If you are looking for information about the dataframes, write code to get a direct answer. 
+    If you are looking for making visualizations, make python code to use matplotlib and save it to "{os.environ['TMP']}/*.png".
+    {query}
+    """)
     return answer
 
   def initialize(self):
