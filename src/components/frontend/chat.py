@@ -136,7 +136,8 @@ class Chat_UI:
                     'output': results['output'],
                 })
 
-            if results["file_path"]:
+
+            if 'file_path' in results and results["file_path"]:
                 st.image(results["file_path"])
             else: 
                 st.markdown(f"`{results['output']}`")

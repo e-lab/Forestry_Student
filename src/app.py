@@ -13,7 +13,7 @@ class UI:
         self.cookie_manager = stx.CookieManager()
 
         if 'api_key' not in st.session_state: 
-            st.session_state['api_key'] = str(os.environ['OPENAI_API_KEY']) if os.environ['OPENAI_API_KEY'] else None 
+            st.session_state['api_key'] = None
             self.pipeline = None
         if 'messages' not in st.session_state: 
             st.session_state['messages'] = [] 
