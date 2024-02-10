@@ -3,6 +3,7 @@
 [Viktor Ciroski](https://viktor1223.github.io/ViktorCiroski.github.io/),
 [Eugenio Culurciello ](https://www.linkedin.com/in/eugenioculurciello/),
 [Sravani Ramishetty](https://www.linkedin.com/in/sravaniramishetty/),
+[Akshath Raghav R](https://www.linkedin.com/in/AkshathRaghav), 
 [Shakti Wadekar](https://www.linkedin.com/in/shakti-nagnath-wadekar/)
 <center>Listed in alphabetical order by last name</center>
 
@@ -119,8 +120,8 @@ This project has been undertaken in the Eugenio Culurciello e-lab at Purdue Univ
 ## Citation 
 
 ```
-@software{Ciroski_Forest_Intellect_Research,
-author = {Ciroski, Viktor and Culurciello, Eugenio and Ramishettt, Sravani and Wadekar, Shakti},
+@software{FIRST,
+author = {Ciroski, Viktor and Culurciello, Eugenio and Ramishetty, Sravani and Ravikiran, Akshath Raghav and Wadekar, Shakti},
 title = {{Forest Intellect Research & Technology System}},
 url = {https://github.com/e-lab/Forestry_Student/tree/main},
 version = {0.0.1}
