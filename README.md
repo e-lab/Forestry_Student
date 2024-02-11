@@ -3,7 +3,7 @@
 [Viktor Ciroski](https://viktor1223.github.io/ViktorCiroski.github.io/),
 [Eugenio Culurciello ](https://www.linkedin.com/in/eugenioculurciello/),
 [Sravani Ramishetty](https://www.linkedin.com/in/sravaniramishetty/),
-[Akshath Raghav R](https://www.linkedin.com/in/AkshathRaghav), 
+[Akshath Raghav R](https://www.linkedin.com/in/akshathrr), 
 [Shakti Wadekar](https://www.linkedin.com/in/shakti-nagnath-wadekar/)
 <center>Listed in alphabetical order by last name</center>
 
