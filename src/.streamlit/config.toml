@@ -1,0 +1,10 @@
+[theme]
+font = "monospace"
+# Background color for the main content area
+backgroundColor = '#f7f9fb'
+
+# Background color for sidebar and most interactive widgets
+secondaryBackgroundColor = '#e3e2df'
+
+[server]
+maxUploadSize = 20
