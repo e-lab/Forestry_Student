@@ -2,10 +2,13 @@
 
 [Viktor Ciroski](https://viktor1223.github.io/ViktorCiroski.github.io/),
 [Eugenio Culurciello ](https://www.linkedin.com/in/eugenioculurciello/),
+[Pranav Jadhav](jadhav14@purdue.edu),
 [Sravani Ramishetty](https://www.linkedin.com/in/sravaniramishetty/),
 [Akshath Raghav R](https://www.linkedin.com/in/akshathrr), 
+[Alexandre Sauquet](asauquet@purdue.edu),
 [Shakti Wadekar](https://www.linkedin.com/in/shakti-nagnath-wadekar/)
 <center>Listed in alphabetical order by last name</center>
+
 
 <br>
 Introduction to FIRST: A Forestry Logic-Intensive Task Handling Framework
@@ -121,7 +124,7 @@ This project has been undertaken in the Eugenio Culurciello e-lab at Purdue Univ
 
 ```
 @software{FIRST,
-author = {Ciroski, Viktor and Culurciello, Eugenio and Ramishetty, Sravani and Ravikiran, Akshath Raghav and Wadekar, Shakti},
+author = {Ciroski, Viktor and Culurciello, Eugenio and Jadhav, Pranav and Ramishetty, Sravani and Ravikiran, Akshath Raghav and Sauquet, Alexandre and Wadekar, Shakti},
 title = {{Forest Intellect Research & Technology System}},
 url = {https://github.com/e-lab/Forestry_Student/tree/main},
 version = {0.0.1}
