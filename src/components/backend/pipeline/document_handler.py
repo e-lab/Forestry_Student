@@ -64,7 +64,8 @@ class Document_Handler:
       elif path.endswith(".txt"): 
         with open(path, "r") as f: 
           total.extend(self.smart_chunking(f.read()))
+
     return total 
     
   def __len__(self):
-    return len(glob.glob(f"{os.environ['TMP']}/*.pdf") + glob.glob(f"{os.environ['TMP']}/*.txt") + glob.glob(f"{os.environ['TMP']}/*.csv"))
+    return len(glob.glob(f"{os.environ['TMP']}/{st.session_state['user_id']}_*.pdf") + glob.glob(f"{os.environ['TMP']}/{st.session_state['user_id']}_*.txt") + glob.glob(f"{os.environ['TMP']}/{st.session_state['user_id']}_*.csv"))

@@ -18,13 +18,13 @@ import time
 import threading
 import re 
 
-class Pipeline: 
-  def __init__(self, max_iterations=5): 
-    self.document_handler = Document_Handler() 
-    self.max_iterations = max_iterations
+@st.cache_data(ttl=3600, max_entries=10, show_spinner=False) 
+def load_hub(link): 
+  return hub.pull(link)
 
-  def run_normal(self, query, chat_history, csv_paths=[], pdf_paths=[]):
-    
+@st.cache_resource(ttl=1800, max_entries=100, show_spinner=False) 
+def load_agent(pdf_paths, csv_paths, max_iterations, _document_handler): 
+    document_handler = _document_handler
     llm = LLM()
     vectorstore = VectorStore() 
 
@@ -34,21 +34,31 @@ class Pipeline:
       Calculator(llm=llm.llm).initialize(),
       WebSearch(llm=llm.llm, vectorstore_public=vectorstore.vectorstore).initialize(),
     ]
-
-    print(pdf_paths, csv_paths)
-
+    
     if pdf_paths: 
-      tools += [InContextQA(vectorstore=vectorstore).initialize(pdf_paths, self.document_handler)]
+      tools += [InContextQA(vectorstore=vectorstore).initialize(pdf_paths, document_handler)]
     if csv_paths:
       tools += [CSVAgent(llm.llm, csv_paths).initialize()]
 
     tools_agent = create_openai_tools_agent(llm.llm, 
             tools,
-            hub.pull("hwchase17/openai-functions-agent"),
+            load_hub("hwchase17/openai-functions-agent"),
           )
-
+    
     tools_agent = AgentExecutor(agent=tools_agent, tools=tools, verbose=True, handle_parsing_errors=True, 
-            max_iterations=self.max_iterations)
+        max_iterations=max_iterations)
+
+    return tools_agent
+
+class Pipeline: 
+  def __init__(self, max_iterations=5): 
+    self.document_handler = Document_Handler() 
+    self.max_iterations = max_iterations
+
+  def run_normal(self, query, chat_history, csv_paths=[], pdf_paths=[]):
+    print(pdf_paths, csv_paths)
+
+    tools_agent = load_agent(pdf_paths, csv_paths, self.max_iterations, self.document_handler)
 
     prompt = """ 
     <system> 
@@ -68,7 +78,7 @@ class Pipeline:
     if csv_paths: 
       prompt += """ 
     FOR QUESTIONS ABOUT DATA: START WITH csv_agent.
-    IF YOU ARE ASKED TO VISUALIZE DATA: START WITH csv_agent, ASK IT TO MAKE A DF QUERYING COMMAND, PASS IT TO python_interpreter TO USE THE QUERY TO SAVE A VISUALIZATION. In this case, return ONLY "||{os.environ['TMP']}/*.png||". 
+    IF YOU ARE ASKED TO VISUALIZE DATA: START WITH csv_agent, ASK IT TO MAKE A DF QUERYING COMMAND, PASS IT TO python_interpreter TO USE THE QUERY TO SAVE A VISUALIZATION. In this case, return ONLY "||{os.environ['TMP']}/*.png||". The path will be parsed, ensure it is the only thing returned. 
     """
     
     

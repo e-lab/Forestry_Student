@@ -5,7 +5,11 @@ import pandas as pd
 import uuid 
 import streamlit as st 
 from langchain.docstore.document import Document
-from langchain_experimental.text_splitter import SemanticChunker
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+
+@st.cache_data(ttl=1800, max_entries=70, show_spinner=False)
+def load_docs(paths, _document_handler): 
+  return RecursiveCharacterTextSplitter(chunk_size=250, chunk_overlap=20).create_documents(_document_handler.load(paths))
 
 class VectorStore: 
   def __init__(self): 
@@ -17,10 +21,8 @@ class VectorStore:
   
   def as_retriever(self, paths=None, document_handler=None):
     if paths: 
-      print(document_handler.load(paths))
-      text_splitter = SemanticChunker(self.embeddings_model)
       return Chroma.from_documents(
-        text_splitter.create_documents(document_handler.load(paths)),
+        load_docs(paths, document_handler),
         self.embeddings_model
       ).as_retriever() 
     else: 

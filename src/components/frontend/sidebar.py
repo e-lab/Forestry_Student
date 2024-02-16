@@ -49,14 +49,14 @@ class Sidebar:
 
     upload_expander = st.sidebar.expander("File Uploader", expanded=True)
     with upload_expander: 
-      pdf_docs = st.file_uploader(label='Select Files to Upload', accept_multiple_files=True, type=['pdf', 'txt', 'csv'])
+      file_docs = st.file_uploader(label='Select Files to Upload', accept_multiple_files=True, type=['pdf', 'txt', 'csv'])
       if st.button('Start Upload'): 
 
         if len(self.pipeline.document_handler) > 5: 
           st.error('Document limit reached for this demo app!')
           return
           
-        for pdf in pdf_docs:
+        for file in file_docs:
 
           progress_text = 'Checking File...'
           my_bar = st.progress(0, text=progress_text)
@@ -66,12 +66,10 @@ class Sidebar:
           my_bar.progress(percent_complete, text=progress_text)
           progress_text = 'Processing File...'
 
-          if pdf.type == 'application/pdf':
-            with open(f"{os.environ['TMP']}/{pdf.name}", 'wb') as f: 
-              f.write(pdf.read())
-          else: 
-            with open(f"{os.environ['TMP']}/{pdf.name}", 'w') as f: 
-              f.write(pdf.read())
+          print(file.type)
+          with open(f"{os.environ['TMP']}/{st.session_state['user_id']}_{file.name}", 'wb') as f: 
+            f.write(file.read())
+
             
           percent_complete += 50
           my_bar.progress(percent_complete, text="Finalizing...")
@@ -86,11 +84,11 @@ class Sidebar:
     del_expander = st.sidebar.expander("File Deleter", expanded=True)
     with del_expander: 
       rag  = st.multiselect('Documents', 
-          [fil.replace(f"{os.environ['TMP']}", '') for fil in glob.glob(f"{os.environ['TMP']}/*.pdf")]+[fil.replace(f"{os.environ['TMP']}", '') for fil in glob.glob(f"{os.environ['TMP']}/*.txt")], 
+          [fil.replace(f"{os.environ['TMP']}", '') for fil in glob.glob(f"{os.environ['TMP']}/{st.session_state['user_id']}_*.pdf")]+[fil.replace(f"{os.environ['TMP']}", '') for fil in glob.glob(f"{os.environ['TMP']}/{st.session_state['user_id']}_*.txt")], 
           placeholder="Select Document(s) to remove", key="rag_del")
       
       csv  = st.multiselect('Data Files', 
-          [fil.replace(f"{os.environ['TMP']}", '') for fil in glob.glob(f"{os.environ['TMP']}/*.csv")], 
+          [fil.replace(f"{os.environ['TMP']}", '') for fil in glob.glob(f"{os.environ['TMP']}/{st.session_state['user_id']}_*.csv")], 
           placeholder="Select CSV(s) to remove", key="csv_del")
 
       if st.button('Delete Files'): 

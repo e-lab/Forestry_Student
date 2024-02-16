@@ -6,6 +6,43 @@ from annotated_text import annotated_text
 import datetime
 from langchain_core.messages import AIMessage, HumanMessage
 import glob 
+from contextlib import contextmanager
+from io import StringIO
+import sys
+import traceback
+
+@contextmanager
+def st_redirect(src, dst):
+    placeholder = st.empty()
+    output_func = getattr(placeholder, dst)
+
+    with StringIO() as buffer:
+        old_write = src.write
+
+        def new_write(b):
+            try: 
+                buffer.write(b)
+                output_func(buffer.getvalue())
+            except:
+                old_write(b)
+
+        try:
+            src.write = new_write
+            yield
+        finally:
+            src.write = old_write
+
+@contextmanager
+def st_stdout(dst):
+    with st_redirect(sys.stdout, dst):
+        yield
+
+
+@contextmanager
+def st_stderr(dst):
+    with st_redirect(sys.stderr, dst):
+        yield
+
 
 class Chat_UI:
     def __init__(self, pipeline, cookie_manger):
@@ -29,15 +66,6 @@ class Chat_UI:
         st.session_state["messages"].append(message)
 
     def initialize(self):
-
-        st.markdown("""
-        <style>
-               .block-container {
-                    padding-top: 0.2rem;
-                    padding-bottom: 2rem;
-                }
-        </style>
-        """, unsafe_allow_html=True)
 
         # Instantiates the chat history
         if "query" not in st.session_state: 
@@ -64,11 +92,11 @@ class Chat_UI:
             submit_text = st.button(label="Send", use_container_width=True, type="primary", key="submit_text")
 
         rag  = st.multiselect('Documents', 
-            [fil.replace(f"{os.environ['TMP']}", '') for fil in glob.glob(f"{os.environ['TMP']}/*.pdf")]+[fil.replace(f"{os.environ['TMP']}", '') for fil in glob.glob(f"{os.environ['TMP']}/*.txt")], 
+            [fil.replace(f"{os.environ['TMP']}/{st.session_state['user_id']}_", '') for fil in glob.glob(f"{os.environ['TMP']}/{st.session_state['user_id']}_*.pdf")]+[fil.replace(f"{os.environ['TMP']}", '') for fil in glob.glob(f"{os.environ['TMP']}/{st.session_state['user_id']}_*.txt")], 
             placeholder="Select Document(s) to chat with", key="rag")
         
         csv  = st.multiselect('Data Files', 
-            [fil.replace(f"{os.environ['TMP']}", '') for fil in glob.glob(f"{os.environ['TMP']}/*.csv")], 
+            [fil.replace(f"{os.environ['TMP']}/{st.session_state['user_id']}_", '') for fil in glob.glob(f"{os.environ['TMP']}/{st.session_state['user_id']}_*.csv")], 
             placeholder="Select CSV(s) to chat with", key="csv")
                 
 
@@ -123,12 +151,11 @@ class Chat_UI:
             with st.spinner("Thinking..."):
                 results = self.pipeline.run_normal(
                     query=text, chat_history=self.format_history(), 
-                    csv_paths=[f"{os.environ['TMP']}"+c for c in csv], 
-                    pdf_paths=[f"{os.environ['TMP']}"+r for r in rag]
+                    csv_paths=[f"{os.environ['TMP']}/{st.session_state['user_id']}_"+c for c in csv], 
+                    pdf_paths=[f"{os.environ['TMP']}/{st.session_state['user_id']}_"+r for r in rag]
                 )
 
-                print(results)
-
+            print(results)
 
             with st.expander('Thought Process:', expanded=False): 
                 st.json({
@@ -158,11 +185,7 @@ class Chat_UI:
 
     def store_messages(self, user_message, assistant_message):
         past = st.session_state["messages"]
-        # print("Past", past)
-
-        # print("Entered if past")
         self.cookie_manger.set("messages", past)
-        # print("Messaged set")
 
     def get_messages(self):
         return self.cookie_manger.get(cookie="messages")
